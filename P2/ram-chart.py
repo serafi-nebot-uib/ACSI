@@ -10,6 +10,9 @@ cols = zip(*(l.strip().split(",") for l in sys.stdin.readlines()))
 types = ("datetime64", "uint", "uint", "float")
 tmsp, free, used, used_percent = (np.array(d, dtype=dt) for d, dt in zip(cols, types))
 
+print(f"free mean: {np.mean(free)} KB")
+print(f"used mean: {np.mean(used)} KB")
+
 # RAM KB
 fig_ram, ax_ram = plt.subplots()
 ax_ram.set_xlabel("timestamp")

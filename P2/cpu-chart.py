@@ -10,6 +10,10 @@ cols = zip(*(l.strip().split(",") for l in sys.stdin.readlines()))
 types = ("datetime64", "float", "float", "float")
 tmsp, pglb, pusr, psys = (np.array(d, dtype=dt) for d, dt in zip(cols, types))
 
+print(f"global mean: {np.mean(pglb)}")
+print(f"user mean: {np.mean(pusr)}")
+print(f"system mean: {np.mean(psys)}")
+
 fig, ax = plt.subplots()
 ax.set_xlabel("timestamp")
 ax.set_ylabel("%CPU")

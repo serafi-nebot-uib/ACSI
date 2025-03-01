@@ -6,18 +6,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import ScalarFormatter
 
-tmsp, free, used, used_percent = [], [], [], []
-while l := sys.stdin.readline().strip():
-  t, f, u, p = l.split(",")
-  tmsp.append(t)
-  free.append(f)
-  used.append(u)
-  used_percent.append(p)
-
-tmsp = np.array(tmsp, dtype="datetime64")
-free = np.array(free, dtype="uint")
-used = np.array(used, dtype="uint")
-used_percent = np.array(used_percent, dtype="float")
+cols = zip(*(l.strip().split(",") for l in sys.stdin.readlines()))
+types = ("datetime64", "uint", "uint", "float")
+tmsp, free, used, used_percent = (np.array(d, dtype=dt) for d, dt in zip(cols, types))
 
 # RAM KB
 fig_ram, ax_ram = plt.subplots()

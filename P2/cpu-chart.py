@@ -6,18 +6,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import ScalarFormatter
 
-tmsp, pglb, pusr, psys = [], [], [], []
-while l := sys.stdin.readline().strip():
-  t, g, u, s = l.split(",")
-  tmsp.append(t)
-  pglb.append(g)
-  pusr.append(u)
-  psys.append(s)
-
-tmsp = np.array(tmsp, dtype="datetime64")
-pglb = np.array(pglb, dtype="float")
-pusr = np.array(pusr, dtype="float")
-psys = np.array(psys, dtype="float")
+cols = zip(*(l.strip().split(",") for l in sys.stdin.readlines()))
+types = ("datetime64", "float", "float", "float")
+tmsp, pglb, pusr, psys = (np.array(d, dtype=dt) for d, dt in zip(cols, types))
 
 fig, ax = plt.subplots()
 ax.set_xlabel("timestamp")

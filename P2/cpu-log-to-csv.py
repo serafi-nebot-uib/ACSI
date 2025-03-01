@@ -2,6 +2,7 @@
 
 import sys
 
+# top -b -n 1080 -d 5 | awk '/^%Cpu\(s\):/ {print strftime("%Y-%m-%d %H:%M:%S"), $0}'
 while l := sys.stdin.readline().strip():
   tmsp, l = l.split(" %Cpu(s):")
   data = [float(x[:-2]) for x in l.split(",")]

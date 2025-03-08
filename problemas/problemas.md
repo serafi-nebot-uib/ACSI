@@ -108,8 +108,6 @@ El rendimiento de un sistema informático bajo la ejecución del benchmark Linpa
 
 Calcúlese el valor medio de los GFLOPS obtenidos por el benchmark.
 
----
-
 Al ser GFLOPS, Calculemos la media armónica:
 
 $$
@@ -118,8 +116,6 @@ $$
 $$
 
 dónde $x_i$ es el valor en GFLOPS y $w_i$ el peso (en este caso, el porcentaje de la carga) de tal forma que $\sum\limits_{i = 1}^{n}w_i = 1$
-
----
 
 ## Problema 3.2
 

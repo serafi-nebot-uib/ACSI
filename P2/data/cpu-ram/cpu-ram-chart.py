@@ -7,8 +7,9 @@ import matplotlib.dates as mdates
 from matplotlib.ticker import ScalarFormatter
 
 cols = zip(*(l.strip().split(",") for l in sys.stdin.readlines()))
-types = ("datetime64", "float", "uint", "float")
+types = ("datetime64", "float", "float", "float")
 tmsp, cpu, ram, ram_percent = (np.array(d, dtype=dt) for d, dt in zip(cols, types))
+ram /= 2**30
 
 # percentage
 _, ax_percent = plt.subplots()
@@ -27,14 +28,14 @@ plt.legend(loc="upper left")
 
 ax_ram = ax_percent.twinx()
 ax_ram.set_xlabel("timestamp")
-ax_ram.set_ylabel("bytes")
+ax_ram.set_ylabel("GB")
 ax_ram.yaxis.set_label_position("right")
 ax_ram.yaxis.set_ticks_position("right")
 ax_ram.yaxis.set_major_formatter(ScalarFormatter(useOffset=False))
 ax_ram.ticklabel_format(style="plain", axis="y")
 ax_ram.set_xticklabels(ax_ram.get_xticklabels(), rotation=90)
 
-ax_ram.plot(tmsp, ram, linestyle="-", color="orange", linewidth=1, label="ram usage (bytes)")
+ax_ram.plot(tmsp, ram, linestyle="-", color="orange", linewidth=1, label="ram usage (GB)")
 
 plt.legend(loc="upper right")
 

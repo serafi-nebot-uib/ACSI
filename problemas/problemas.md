@@ -126,8 +126,8 @@ Calcúlese el valor medio de los GFLOPS obtenidos por el benchmark.
 Al ser GFLOPS, calculemos la media armónica:
 
 $$
-\overline{GFLOPS} = \frac{1}{\sum\limits_{i=1}^{n}\frac{w_i}{x_i}} =
-\frac{1}{\frac{0.25}{2}+\frac{0.25}{4.5}+\frac{0.5}{6}} = 3.789473 \textrm{ GFLOPS}
+\frac{1}{\sum\limits_{i=1}^{n}\frac{w_i}{x_i}} =
+\frac{1}{\frac{0.25}{2}+\frac{0.25}{4.5}+\frac{0.5}{6}} = 3.789473 \mathit{ GFLOPS}
 $$
 
 dónde $x_i$ es el valor en GFLOPS y $w_i$ el peso (en este caso, el porcentaje de la carga) de tal forma que $\sum\limits_{i = 1}^{n}w_i = 1$
@@ -152,19 +152,19 @@ Para calcular el timepo medio de cada instrucción se hace la media aritmética 
 Tiempo en i5:
 
 $$
-T_{i5} = 6.5\cdot 0.1 + 1.4\cdot0.35 + 8.6\cdot0.05 + 2.7\cdot0.5 = 2.92 \textrm{ ns}
+T_{i5} = 6.5\cdot 0.1 + 1.4\cdot0.35 + 8.6\cdot0.05 + 2.7\cdot0.5 = 2.92 \mathit{ ns}
 $$
 
 Tiempo en i7:
 
 $$
-T_{i7} = 6.1\cdot0.1 + 0.7\cdot0.35 + 7.9\cdot0.05 + 1.9\cdot0.5 = 2.2 \textrm{ ns}
+T_{i7} = 6.1\cdot0.1 + 0.7\cdot0.35 + 7.9\cdot0.05 + 1.9\cdot0.5 = 2.2 \mathit{ ns}
 $$
 
 2. Determinar el nuevo tiempo medio de ejecución de una instrucción en el procesador Intel i5 si un nuevo diseño consigue que todas las instrucciones se ejecuten un 15% más rápidamente. 
 
 $$
-\frac{T_{i5}}{T_{mej}} = \frac{2.92}{1.15} = 2.539130 \textrm{ ns}
+\frac{T_{i5}}{T_{mej}} = \frac{2.92}{1.15} = 2.539130 \mathit{ ns}
 $$
 
 ## Problema 3.3
@@ -181,19 +181,19 @@ Considérese un programa de cálculo numérico que se ejecuta en 83 segundos y h
 ¿Cuál es el rendimiento conseguido por el sistema con este programa de cálculo atendiendo a los GFLOPS? ¿Y si se mide en GFLOPS normalizados? 
 
 $$
-\textrm{FLOPS} = \left[ \frac{\textrm{floating point operations}}{\textrm{second}} \right] \implies \textrm{GFLOPS} = \frac{\textrm{FLOPS}}{10^9} = \left[ \frac{10^9 \textrm{ floating point operations}}{\textrm{second}} \right]
+\mathit{FLOPS} = \left[ \frac{\textrm{floating point operations}}{\textrm{execution time}} \right] \implies \mathit{GFLOPS} = \frac{\mathit{FLOPS}}{10^9} = \left[ \frac{10^9 \textrm{ floating point operations}}{\textrm{execution time}} \right]
 $$
 
 GFLOPS del programa:
 
 $$
-\frac{(78 + 29 + 13 + 42) \cdot 10^9}{10^9 \cdot 83} = \frac{162}{83} = 1.95 \textrm{ GFLOPS}
+\frac{(78 + 29 + 13 + 42) \cdot 10^9}{10^9 \cdot 83} = \frac{162}{83} = 1.95 \mathit{ GFLOPS}
 $$
 
 GFLOPS normalizados:
 
 $$
-\frac{(1\cdot78 + 3\cdot29 + 8\cdot13 + 12\cdot42) \cdot 10^9}{10^9 \cdot 83} = \frac{773}{83} = 9.31 \textrm{ GFLOPS}
+\frac{(1\cdot78 + 3\cdot29 + 8\cdot13 + 12\cdot42) \cdot 10^9}{10^9 \cdot 83} = \frac{773}{83} = 9.31 \mathit{ GFLOPS}
 $$
 
 ## Problema 3.4
@@ -229,9 +229,9 @@ $$
 Podemos calcular los MIPS de la siguiente forma:
 
 $$
-F_{CPU} = \frac{\textrm{cycle}}{\textrm{second}},
-\mathit{MIPS} = \frac{\textrm{instruction} \cdot 10^6}{\textrm{second}},
-\mathit{CPI} = \frac{\textrm{cycle}}{\textrm{instruction}}
+F_{CPU} = \frac{\mathit{cycle}}{\mathit{second}},
+\mathit{MIPS} = \frac{\mathit{instruction} \cdot 10^6}{\mathit{second}},
+\mathit{CPI} = \frac{\mathit{cycle}}{\mathit{instruction}}
 $$
 
 $$
@@ -248,15 +248,34 @@ $$
 
 ## Problema 3.5
 
-Un programa ejecuta un total de $186\cdot10^8$ instrucciones. De ellas, el 75% se ejecutan en 3 ciclos de reloj, mientras que el resto lo hace en 5 ciclos de reloj. Tras haber medido el tiempo de ejecución de dicho programa a través del monitor time se ha obtenido la siguiente información:
+Un programa ejecuta un total de $186\cdot10^8$ instrucciones. De ellas, el 75% se ejecutan en 3 ciclos de reloj, mientras que el resto lo hace en 5 ciclos de reloj. Tras haber medido el tiempo de ejecución de dicho programa a través del monitor `time` se ha obtenido la siguiente información:
 
 ```
 real 0m57s
 user 0m23s
-sys 0m1.2s
+sys  0m1.2s
 ```
 
 Se pide calcular el número medio de ciclos por instrucción (CPI) obtenidos por el programa, la frecuencia del procesador y los MIPS.
+
+Número total de ciclos:
+
+$$
+C_T = 186\cdot10^8\cdot3\cdot0.75 + 186\cdot10^8\cdot5\cdot0.25 = 350000000 \mathit{ cycles}
+$$
+
+$$
+\overline{CPI} = \frac{\sum\limits_{i=0}^{n}C_i \cdot w_i}{n} = \frac{C_T}{186\cdot10^8} = \frac{350000000}{186\cdot10^8} = 3.5 \mathit{ CPI}
+$$
+
+$$
+\mathit{MIPS} = \left[ \frac{\textrm{number of instructions in millions}}{\textrm{execution time}} \right] \implies \frac{186\cdot10^2}{23 + 1.2} = 768.595 \mathit{MIPS}
+$$
+
+$$
+F_{CPU} = \mathit{MIPS}\cdot\mathit{CPI} \implies
+F_{CPU} = \frac{768.696 \cdot 10^6 \textrm{ instructions}}{1 \textrm{ second}} \cdot \frac{3.5 \textrm{ cycles}}{1 \textrm{ instruction}} = 2690436000 \mathit{Hz} = 2.696 \mathit{GHz}
+$$
 
 ## Problema 3.6
 

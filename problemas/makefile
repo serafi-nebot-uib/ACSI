@@ -1,2 +1,2 @@
 all:
-	pandoc -o problemas.pdf problemas.md -H disable_float.tex
+	pandoc -f markdown+raw_tex -t pdf --metadata date="$(shell date +"%d/%m/%Y")" -o problemas.pdf problemas.md

@@ -1,14 +1,26 @@
 ---
 title: "Cuaderno de problemas"
 author: "Serafí Nebot Ginard"
-# date: "02/03/2025"
+date: $DATE$
 pdf-engine: xelatex
 fontfamily: libertinus
-# mainfont: Courier
 geometry: top=2cm, bottom=1.5cm, left=1.5cm, right=1.5cm
 documentclass: article
 # numbersections: true
 toc: true
+header-includes: |
+    \usepackage{float}
+    \let\origfigure\figure
+    \let\endorigfigure\endfigure
+    \renewenvironment{figure}[1][H]%
+    {\origfigure[H]}{\endorigfigure}
+
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \fancyhead[L]{Cuaderno de problemas}
+    \fancyhead[R]{Serafí Nebot Ginard}
 ---
 
 \pagebreak
@@ -74,6 +86,7 @@ El tiempo de respuesta de una transacción web es de 2,5 segundos y el 70% de es
 
 Se quiere mejorar el rendimiento del servidor RELATIVITY2 mediante el cambio de su unidad de disco. Esta unidad de disco mejora la velocidad en los accesos de E/S el triple. Calcula el tiempo que se mejora sabiendo que las aplicaciones que se ejecutan en ese servidor tras la mejora, ahora usan el disco un 50% del tiempo. Si las aplicaciones que se ejecutan en RELATIVITY2 tardaban con el disco antiguo 3,5 segundos, ¿cuánto tiempo tardarán con la unidad de disco nueva? ¿Cuál es la aceleración global del servidor RELATIVITY2? 
 
+\pagebreak
 
 # Tema 2
 
@@ -94,6 +107,8 @@ Un sistema informático que trabaja en el sistema operativo Linux tiene instalad
 3. Si el volumen máximo del directorio /var/log/sa es de 150 MB, ¿cuántos ficheros históricos saDD se pueden almacenar?
 4. En dos años, ¿se desbordaría el tamaño del directorio? ¿Cuánta capacidad nos faltaría?
 
+\pagebreak
+
 # Tema 3
 
 ## Problema 3.1
@@ -108,7 +123,7 @@ El rendimiento de un sistema informático bajo la ejecución del benchmark Linpa
 
 Calcúlese el valor medio de los GFLOPS obtenidos por el benchmark.
 
-Al ser GFLOPS, Calculemos la media armónica:
+Al ser GFLOPS, calculemos la media armónica:
 
 $$
 \overline{GFLOPS} = \frac{1}{\sum\limits_{i=1}^{n}\frac{w_i}{x_i}} =
@@ -165,6 +180,22 @@ Considérese un programa de cálculo numérico que se ejecuta en 83 segundos y h
 
 ¿Cuál es el rendimiento conseguido por el sistema con este programa de cálculo atendiendo a los GFLOPS? ¿Y si se mide en GFLOPS normalizados? 
 
+$$
+\textrm{FLOPS} = \left[ \frac{\textrm{floating point operations}}{\textrm{second}} \right] \implies \textrm{GFLOPS} = \frac{\textrm{FLOPS}}{10^9} = \left[ \frac{10^9 \textrm{ floating point operations}}{\textrm{second}} \right]
+$$
+
+GFLOPS del programa:
+
+$$
+\frac{(78 + 29 + 13 + 42) \cdot 10^9}{10^9 \cdot 83} = \frac{162}{83} = 1.95 \textrm{ GFLOPS}
+$$
+
+GFLOPS normalizados:
+
+$$
+\frac{(1\cdot78 + 3\cdot29 + 8\cdot13 + 12\cdot42) \cdot 10^9}{10^9 \cdot 83} = \frac{773}{83} = 9.31 \textrm{ GFLOPS}
+$$
+
 ## Problema 3.4
 
 Un servidor dispone de un procesador con un reloj que trabaja a 3,2 GHz. Este procesador estructura su juego de instrucciones en tres categorías: simples, normales y complejas. El número medio de ciclos por instrucción (CPI) para cada categoría se indica en la siguiente tabla.
@@ -177,10 +208,42 @@ Un servidor dispone de un procesador con un reloj que trabaja a 3,2 GHz. Este pr
 
 El servidor anterior se está utilizando para comparar el rendimiento de dos versiones de un compilador, V1 y V2. El número de instrucciones de cada categoría ejecutadas por un programa de prueba compilado con ambas versiones se indica también en la tabla anterior. Se pide calcular, para las dos versiones del compilador, el CPI medio y los MIPS conseguidos por el programa. 
 
-Versión 1:
+Calculemos la media aritmética ponderada, dónde $CPI_i$ es el valor del CPI por el tipo de instrucción $i$ y $w_i$ el peso, en este caso el ratio de instrucciones $w_i = \frac{I_i}{I_{total}}$, del tipo $i$, tal que $\sum\limits_{i=0}^{n}w_i = 1$:
 
 $$
-\frac{1\cdot9\cdot10^6 + 3\cdot1.5\cdot10^6 + 5\cdot2\cdot10^6}{9\cdot10^6 + 1.5\cdot10^6 + 2\cdot10^6} = 1.9
+\sum\limits_{i = 0}^{n}CPI_i \cdot w_i
+$$
+
+$$
+CPI_{V1} = 1 \cdot \frac{9 \cdot 10^6}{12.5 \cdot 10^6} +
+3 \cdot \frac{1.5 \cdot 10^6}{12.5 \cdot 10^6} +
+5 \cdot \frac{2 \cdot 10^6}{12.5 \cdot 10^6} = 1.88 \mathit{CPI}
+$$
+
+$$
+CPI_{V2} = 1 \cdot \frac{11 \cdot 10^6}{15 \cdot 10^6} +
+3 \cdot \frac{2.5 \cdot 10^6}{15 \cdot 10^6} +
+5 \cdot \frac{1.5 \cdot 10^6}{15 \cdot 10^6} = 1.73 \mathit{CPI}
+$$
+
+Podemos calcular los MIPS de la siguiente forma:
+
+$$
+F_{CPU} = \frac{\textrm{cycle}}{\textrm{second}},
+\mathit{MIPS} = \frac{\textrm{instruction} \cdot 10^6}{\textrm{second}},
+\mathit{CPI} = \frac{\textrm{cycle}}{\textrm{instruction}}
+$$
+
+$$
+\frac{F_{CPU}}{10^6} = \mathit{MIPS} \cdot \mathit{CPI} \implies \mathit{MIPS} = \frac{F_{CPU}}{\mathit{CPI} \cdot 10^6}
+$$
+
+$$
+\mathit{MIPS}_{V1} = \frac{3.2 \cdot 10^9}{CPI_{V1} \cdot 10^6} = \frac{32 \cdot 10^9}{1.88 \cdot 10^6} = 1702.127 \mathit{MIPS}
+$$
+
+$$
+\mathit{MIPS}_{V2} = \frac{3.2 \cdot 10^9}{CPI_{V2} \cdot 10^6} = \frac{32 \cdot 10^9}{1.73 \cdot 10^6} = 1849.71 \mathit{MIPS}
 $$
 
 ## Problema 3.5

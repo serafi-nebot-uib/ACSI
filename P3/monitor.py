@@ -45,7 +45,7 @@ def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_ove
   ptrn = re.compile(r"^\s*(total time:)\s*\b(\d+\.\d+)(h|m|s|ms|us)\b")
   load_time = next(float(p.group(2)) * TIME_UNITS[p.group(3)] for l in stdout.splitlines() if (p := ptrn.search(l.decode())))
 
-  return load_time, cpu_usage, mem_usage
+  return load_time, cpu_usage, mem_usage, stdout
 
 if __name__ == "__main__":
   import argparse

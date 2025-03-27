@@ -47,6 +47,38 @@ def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_ove
 
   return load_time, cpu_usage, mem_usage, stdout
 
+# example failed sysbench output (invalid total time)
+"""
+sysbench 0.4.12:  multi-threaded system evaluation benchmark
+
+Running the test with following options:
+Number of threads: 6
+
+Doing CPU performance benchmark
+
+Threads started!
+WARNING: Operation time (18446740473405411328.000000) is greater than maximal counted value, counting as 10000000000000.000000
+WARNING: Percentile statistics will be inaccurate
+Done.
+
+Maximum prime number checked in CPU test: 100000
+
+
+Test execution summary:
+    total time:                          18446740478.1716s
+    total number of events:              10000
+    total time taken by event execution: 18446722500.4708
+    per-request statistics:
+         min:                                  2.03ms
+         avg:                            1844672250.05ms
+         max:                            18446740473411.55ms
+         approx.  95 percentile:               7.80ms
+
+Threads fairness:
+    events (avg/stddev):           1666.6667/28.68
+    execution time (avg/stddev):   3074453750.0785/15372286728.09
+"""
+
 if __name__ == "__main__":
   import argparse
 

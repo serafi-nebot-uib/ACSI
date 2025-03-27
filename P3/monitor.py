@@ -9,18 +9,22 @@ from pathlib import Path
 
 TIME_UNITS = { "h": 60*60, "m": 60, "s": 1, "ms": 1/1000, "us": 1/1000000 }
 
-def usage():
+def cpu() -> tuple[float, float]:
   with Path("/proc/stat").open("r") as f:
     # field order: [user] [nice] [system] [idle] [iowait] [irq] [softirq] [steal] [guest] [guest_nice]
     fields = list(map(int, f.readline().strip().split()[1:]))
     return sum(fields), fields[3] + fields[4]
 
-def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_overhead: int = False) -> tuple[float, list[float]]:
+def mem() -> tuple[float, float]:
+  with Path("/proc/meminfo").open("r") as f:
+    return float(f.readline().split()[1].split()[0]) * 1024, float(f.readline().split()[1].split()[0]) * 1024
+
+def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_overhead: int = False) -> tuple[float, list[float], list[float]]:
   cmd = ["sysbench", f"--num-threads={num_threads}", "--test=cpu", f"--cpu-max-prime={max_prime}", "run"]
-  prev, time_start = usage(), time.time()
+  cpu_prev, time_start = cpu(), time.time()
   proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE) # noqa: S603
 
-  cpu = []
+  cpu_usage, mem_usage = [], []
   while True:
     time_total = time.time() - time_start
     sleep_time = monitor_interval - time_total
@@ -28,15 +32,20 @@ def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_ove
     time.sleep(sleep_time)
     if proc.poll() is not None: break
     time_start = time.time()
-    current = usage()
-    total_diff, idle_diff = (a - b for a, b in zip(current, prev))
-    cpu.append((1 - idle_diff / total_diff) * 100 if total_diff > 0 else 0)
-    prev = current
+
+    cpu_current = cpu()
+    total_diff, idle_diff = (a - b for a, b in zip(cpu_current, cpu_prev))
+    cpu_usage.append((1 - idle_diff / total_diff) * 100 if total_diff > 0 else 0)
+    cpu_prev = cpu_current
+
+    mem_total, mem_free = mem()
+    mem_usage.append((1 - mem_free / mem_total) * 100)
 
   stdout, *_ = proc.communicate()
   ptrn = re.compile(r"^\s*(total time:)\s*\b(\d+\.\d+)(h|m|s|ms|us)\b")
   load_time = next(float(p.group(2)) * TIME_UNITS[p.group(3)] for l in stdout.splitlines() if (p := ptrn.search(l.decode())))
-  return load_time, cpu
+
+  return load_time, cpu_usage, mem_usage
 
 if __name__ == "__main__":
   import argparse
@@ -48,7 +57,8 @@ if __name__ == "__main__":
   parser.add_argument("-v", "--verbose", action="count", help="verbose output", default=0)
   args = parser.parse_args()
 
-  load_time, cpu = load(num_threads=args.threads, max_prime=args.max_prime, monitor_interval=args.monitor_interval,
+  load_time, cpu_usage, mem_usage = load(num_threads=args.threads, max_prime=args.max_prime, monitor_interval=args.monitor_interval,
                             print_overhead=args.verbose > 0)
   print(f"load time (s): {load_time}")
-  print(f"cpu usage (%): {', '.join(f'{x:.4f}' for x in cpu)}")
+  print(f"cpu usage (%): {', '.join(f'{x:.4f}' for x in cpu_usage)}")
+  print(f"mem usage (%): {', '.join(f'{x:.4f}' for x in mem_usage)}")

@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from itertools import zip_longest
 
-
 CI = 0.95
 WIDTH = 100
 SEP = "━" * WIDTH
@@ -37,40 +36,18 @@ def print_info(rt, rt_mean, ci, ci_lower, ci_upper, ci_coeff, prod=None, cpu_gro
       print(f"    mean mem (%): {np.mean(mem_group):.4f}")
     print(SEP)
 
-if __name__ == "__main__":
-  tests = [ (300000, 9), (500000, 9), (800000, 9), (1200000, 9) ]
+def rt_prod_chart(max_primes, resp_times):
+  assert len(max_primes) == len(resp_times)
 
-  plot_rt = []
-  plot_prod = []
-  plot_labels = []
-
-  data_dir = Path("data")
-  for max_prime, threads in tests:
-    with (data_dir / f"{max_prime}-{threads}.csv").open("r") as f:
-      reader = csv.reader(f)
-      next(reader)
-      resp_times = [float(x) for x in next(reader)]
-      n = len(resp_times)
-
-      next(reader)
-      next(reader)
-      cpu_usages = [[float(x) for x in next(reader)] for _ in range(n)]
-
-      next(reader)
-      next(reader)
-      mem_usages = [[float(x) for x in next(reader)] for _ in range(n)]
-
-      cpu_group, mem_group = np_group_mean(cpu_usages), np_group_mean(mem_usages)
-      rt = np.array(resp_times)
-      rt_mean = np.mean(rt)
-      prod = np.full(n, max_prime, dtype="float") / rt
-      prod_mean = np.mean(prod)
-
-      plot_rt.append(float(rt_mean))
-      plot_prod.append(float(prod_mean))
-      plot_labels.append(str(max_prime)) # convert to string to avoid invisible bars (or specify bar width)
-
-  print(plot_prod)
+  plot_rt, plot_prod, plot_labels = [], [], []
+  for prime, rt_list in zip(max_primes, resp_times):
+    rt = np.array(rt_list)
+    rt_mean = np.mean(rt)
+    prod = np.full(len(rt_list), prime, dtype="float") / rt
+    prod_mean = np.mean(prod)
+    plot_rt.append(float(rt_mean))
+    plot_prod.append(float(prod_mean))
+    plot_labels.append(str(prime))
 
   positions = np.arange(len(plot_labels))
   width = 0.35
@@ -95,4 +72,97 @@ if __name__ == "__main__":
 
   fig_rt.legend(loc="upper right")
   fig_rt.suptitle("Response Time and Production", fontsize=16, fontweight="bold")
+
   plt.show()
+
+def cpu_mem_prime_chart(max_primes, cpu_usages, mem_usages):
+  assert len(max_primes) == len(cpu_usages) == len(mem_usages)
+
+  plot_labels, plot_cpu, plot_mem = [], [], []
+  for prime, cpu, mem in zip(max_primes, cpu_usages, mem_usages):
+    cpu_mean, mem_mean = np.mean(np_group_mean(cpu)), np.mean(np_group_mean(mem))
+    plot_cpu.append(cpu_mean)
+    plot_mem.append(mem_mean)
+    plot_labels.append(str(prime))
+
+  positions = np.arange(len(plot_labels))
+  width = 0.35
+
+  fig_cpu_mem, ax_cpu = plt.subplots(figsize=(12, 9))
+
+  ax_cpu.set_xticks(positions)
+  ax_cpu.set_xticklabels(plot_labels)
+  ax_cpu.set_xlabel("max prime")
+  ax_mem = ax_cpu.twinx()
+
+  ax_cpu.bar(positions - width/2, plot_cpu, width=width, color="blue", label="% CPU")
+  ax_mem.bar(positions + width/2, plot_mem, width=width, color="red", label="% MEM")
+
+  ax_cpu.yaxis.set_label_position("left")
+  ax_cpu.yaxis.set_ticks_position("left")
+  ax_cpu.set_ylabel("% CPU")
+
+  ax_mem.yaxis.set_label_position("right")
+  ax_mem.yaxis.set_ticks_position("right")
+  ax_mem.set_ylabel("% MEM")
+
+  fig_cpu_mem.legend(loc="upper right")
+  fig_cpu_mem.suptitle("CPU & MEM usage", fontsize=16, fontweight="bold")
+
+  plt.show()
+
+def cpu_mem_chart(prime, rt_list, cpu_usages, mem_usages):
+  assert len(rt_list) == len(cpu_usages) == len(mem_usages)
+
+  fig_cpu, ax_cpu = plt.subplots(figsize=(16, 9))
+  ax_cpu.set_xlabel("execution time (s)")
+  ax_cpu.yaxis.set_label_position("left")
+  ax_cpu.yaxis.set_ticks_position("left")
+  ax_cpu.set_ylabel("cpu usage (%)")
+
+  fig_mem, ax_mem = plt.subplots(figsize=(16, 9))
+  ax_mem.set_xlabel("execution time (s)")
+  ax_mem.yaxis.set_label_position("left")
+  ax_mem.yaxis.set_ticks_position("left")
+  ax_mem.set_ylabel("mem usage (%)")
+
+  for i, rt, cpu, mem in zip(range(n), rt_list, cpu_usages, mem_usages):
+    ax_cpu.plot(range(len(cpu)), cpu, label=f"load {i+1} ({rt}s)")
+    ax_mem.plot(range(len(mem)), mem, label=f"load {i+1} ({rt}s)")
+
+  cpu_mean, mem_mean = np_group_mean(cpu_usages), np_group_mean(mem_usages)
+  ax_cpu.plot(range(len(cpu_mean)), cpu_mean, linestyle="--", label="cpu mean")
+  ax_mem.plot(range(len(mem_mean)), mem_mean, linestyle="--", label="mem mean")
+
+  fig_cpu.legend(loc="upper right")
+  fig_cpu.suptitle(f"CPU usage [{prime} max prime]", fontsize=16, fontweight="bold")
+  fig_mem.legend(loc="upper right")
+  fig_mem.suptitle(f"MEM usage [{prime} max prime]", fontsize=16, fontweight="bold")
+
+  plt.show()
+
+if __name__ == "__main__":
+  data_dir = Path("data")
+  tests = [ (300000, 9), (500000, 9), (800000, 9), (1200000, 9) ]
+
+  rt_list, cpu_usages, mem_usages = [], [], []
+  for max_prime, threads in tests:
+    with (data_dir / f"{max_prime}-{threads}.csv").open("r") as f:
+      reader = csv.reader(f)
+      next(reader)
+      resp_times = [float(x) for x in next(reader)]
+      n = len(resp_times)
+      rt_list.append(resp_times)
+
+      next(reader)
+      next(reader)
+      cpu_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
+
+      next(reader)
+      next(reader)
+      mem_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
+
+  max_primes = [p for p, _ in tests]
+  rt_prod_chart(max_primes, rt_list)
+  cpu_mem_prime_chart(max_primes, cpu_usages, mem_usages)
+  for prime, rt, cpu, mem in zip(max_primes, rt_list, cpu_usages, mem_usages): cpu_mem_chart(prime, rt, cpu, mem)

@@ -41,7 +41,6 @@ if __name__ == "__main__":
   # TEST 30 (3 second delay)
   mean = [ 8.9948, 8.9871, 8.9854, 8.9857, 8.9849, 8.9874, 8.9869, 8.9862, 8.9855, 8.9854, 8.9842, 8.9836, 8.9839, 8.9835, 8.9880, 8.9875, 8.9871,
           8.9868, 8.9871, 8.9865, 8.9863, 8.9867, 8.9865, 8.9868, 8.9884, 8.9900, 8.9918, 8.9934, 8.9951 ]
-
   ci = [ 0.0476, 0.0346, 0.0189, 0.0128, 0.0099, 0.0100, 0.0085, 0.0074, 0.0068, 0.0060, 0.0061, 0.0057, 0.0052, 0.0049, 0.0107, 0.0101, 0.0095,
         0.0090, 0.0085, 0.0081, 0.0078, 0.0074, 0.0071, 0.0068, 0.0074, 0.0078, 0.0083, 0.0087, 0.0091 ]
   coeffs = [ 0.005297283196676037, 0.003852446422302081, 0.002108422414301809, 0.001427991100020698, 0.0011031957115770381, 0.0011166969361914216,
@@ -57,7 +56,7 @@ if __name__ == "__main__":
   ax_coeff.yaxis.set_ticks_position("left")
   ax_coeff.set_xticks(range(labels[0], labels[-1] + 1, 1))
   ax_coeff.bar(labels, coeffs, label="95% CI coefficient")
-  ax_coeff.axhline(y=0.002, color="red", linestyle="--", linewidth=2, label="95% CI coefficient threshold")
+  ax_coeff.axhline(y=0.001, color="red", linestyle="--", linewidth=2, label="95% CI coefficient threshold")
   fig_coeff.suptitle("95% CI coefficients [9 threads; 300000 prime; 30 loads]", fontsize=16, fontweight="bold")
   fig_coeff.legend(loc="upper right")
 

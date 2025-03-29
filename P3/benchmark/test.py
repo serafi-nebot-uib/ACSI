@@ -17,7 +17,10 @@ OUTDIR = "out"
 def float_str(f) -> str: return ", ".join(f"{x:.4f}" for x in f)
 def np_group_mean(a): return np.array([np.mean([x for x in b if x]) for b in zip_longest(*a)])
 
-def test(threads, max_prime, monitor_interval, load_group_cnt): # noqa: PLR0915
+def chart():
+  pass
+
+def test(threads, max_prime, monitor_interval, load_group_cnt):
   # width = os.get_terminal_size()[0]
   width = 100
   sep ="━" * width
@@ -30,20 +33,24 @@ def test(threads, max_prime, monitor_interval, load_group_cnt): # noqa: PLR0915
   outdir = Path(f"{OUTDIR}/{dirname}")
   outdir.mkdir(parents=True, exist_ok=True)
 
-  resp_times, cpu_usages, mem_usages = [], [], []
-  with (outdir / "sysbench.log").open("w") as f:
-    for i in range(1, load_group_cnt + 1):
-      load_time, cpu, mem, output = monitor.load(num_threads=threads, max_prime=max_prime, monitor_interval=monitor_interval, print_overhead=False)
-      resp_times.append(load_time)
-      cpu_usages.append(cpu)
-      mem_usages.append(mem)
+  # resp_times, cpu_usages, mem_usages = [], [], []
+  # with (outdir / "sysbench.log").open("w") as f:
+  #   for i in range(1, load_group_cnt + 1):
+  #     load_time, cpu, mem, output = monitor.load(num_threads=threads, max_prime=max_prime, monitor_interval=monitor_interval, print_overhead=False)
+  #     resp_times.append(load_time)
+  #     cpu_usages.append(cpu)
+  #     mem_usages.append(mem)
+  #
+  #     load = f"load {i}: {load_time:.4f}s"
+  #     f.write(sep + "\n")
+  #     f.write(load + "\n")
+  #     f.write(sep + "\n")
+  #     f.write(output.decode())
+  #     print(load)
 
-      load = f"load {i}: {load_time:.4f}s"
-      f.write(sep + "\n")
-      f.write(load + "\n")
-      f.write(sep + "\n")
-      f.write(output.decode())
-      print(load)
+  resp_times = [8.9706, 8.9722, 8.9607, 9.0913, 8.9782, 8.9616, 9.0925, 8.9766, 8.9610, 8.9648, 8.9705, 8.9676, 8.9624, 8.9593, 8.9796, 8.9574, 9.0534, 9.0130, 8.9835, 8.9623, 8.9624, 8.9534, 9.0169, 9.0017, 8.9653, 8.9591, 8.9810, 8.9553, 8.9771, 9.0853]
+  cpu_usages = [[75.4671, 75.3470, 75.0541, 75.0923, 75.0477, 75.0291, 75.0701, 75.0576, 75.0208]] * 30
+  mem_usages = [[13.5310, 13.5309, 13.5307, 13.5308, 13.5307, 13.5304, 13.5303, 13.5299, 13.5272]] * 30
 
   cpu_group, mem_group = np_group_mean(cpu_usages), np_group_mean(mem_usages)
   resp_times = np.array(resp_times) # type: ignore[assignment]
@@ -53,22 +60,22 @@ def test(threads, max_prime, monitor_interval, load_group_cnt): # noqa: PLR0915
 
   mean = np.mean(resp_times)
   ci_lower, ci_upper = st.t.interval(CI, n-1, loc=mean, scale=st.sem(resp_times))
-  valid = [x for x in resp_times if ci_lower <= x <= ci_upper]
-  valid_percent = len(valid) / len(resp_times) * 100
+  ci = ci_upper - mean
 
   print(f"          rt (s): {float_str(resp_times)}")
   print(f"     mean rt (s): {mean:.4f}")
   print(f"   stddev rt (s): {np.std(resp_times):.4f}")
-  print(f"      {CI*100:3.0f}% ci rt: {ci_lower:.4f} {ci_upper:.4f}")
+  print(f"      {CI*100:3.0f}% ci rt: {ci:.4f} -> [{ci_lower:.4f}, {ci_upper:.4f}]")
+  print(f"     coeff ci rt: {ci / mean}")
   print(f"            prod: {float_str(prod)}")
   print(f"       mean prod: {np.mean(prod):.4f}")
-  print(f"           valid: {float_str(valid)}")
-  print(f"         valid %: {valid_percent:.4f}")
   print()
   print(f"   usage cpu (%): {float_str(cpu_group)}")
   print(f"    mean cpu (%): {np.mean(cpu_group):.4f}")
   print(f"   usage mem (%): {float_str(mem_group)}")
   print(f"    mean mem (%): {np.mean(mem_group):.4f}")
+  print()
+  print()
 
   # fig_rt, ax_rt = plt.subplots(figsize=(16, 9))
   # ax_rt.set_ylabel("seconds")
@@ -101,30 +108,20 @@ def test(threads, max_prime, monitor_interval, load_group_cnt): # noqa: PLR0915
   # plt.show()
 
 if __name__ == "__main__":
-  MAX_PRIMES = [ 150000, 300000, 500000, 600000 ]
+  MAX_PRIMES = [ 300000, 500000, 800000, 1200000 ]
   THREADS = 6
   MONITOR_INTERVAL = 1
   LOAD_GROUP_CNT = 3
+  CI_COEFF_THRESHOLD = 0.02
 
-  # test(THREADS, MAX_PRIME, MONITOR_INTERVAL, 3)
-  test(threads=6, max_prime=150000, monitor_interval=1, load_group_cnt=1)
+  test(threads=9, max_prime=300000, monitor_interval=1, load_group_cnt=3*10)
 
-"""
-RESPONSE TIME TESTS [6 THREADS (75% CPU)]
-  150000 8s
-  300000 20s
-  500000 40s
-  600000 52s
-  800000 78s
-  1000000 100s
-
-CHOSEN BENCHMARKS
-  150000 300000 500000 600000
-"""
-
-"""
-MONITOR TIME TESTS
-     monitor time: 0.000281, 0.000135, 0.000171, 0.000579, 0.000216, 0.000200, 0.000258, 0.000227, 0.000221, 0.000196, 0.000162, 0.000180, 0.000189, 0.000185, 0.000193, 0.000185, 0.000317, 0.000221
-mean monitor time: 0.000229
-overhead: Tm / Ti = 0.000229 / 1.0 = 0.000229 -> 0.0229 %
-"""
+# RESPONSE TIME TESTS @ 9 CPUS (75%)
+# 1200000 60s
+# 1000000 47s
+#  800000 35s
+#  600000 24s
+#  500000 18s
+#  400000 13s
+#  300000  9s
+#  250000  7s

@@ -54,24 +54,28 @@ def rt_prod_chart(max_primes, resp_times):
 
   fig_rt, ax_rt = plt.subplots(figsize=(12, 9))
 
+  print(f"primes: {max_primes}")
+  print(f"    rt: {plot_rt}")
+  print(f"  prod: {plot_prod}")
+
   ax_rt.set_xticks(positions)
   ax_rt.set_xticklabels(plot_labels)
-  ax_rt.set_xlabel("max prime")
+  ax_rt.set_xlabel("carga (max prime)")
   ax_prod = ax_rt.twinx()
 
-  ax_rt.bar(positions - width/2, plot_rt, width=width, color="blue", label="response time (second)")
-  ax_prod.bar(positions + width/2, plot_prod, width=width, color="orange", label="productivity (prime/second)")
+  ax_rt.bar(positions - width/2, plot_rt, width=width, color="blue", label="tiempo respuesta (segundos)")
+  ax_prod.bar(positions + width/2, plot_prod, width=width, color="orange", label="productividad (primos/segundo)")
 
   ax_rt.yaxis.set_label_position("left")
   ax_rt.yaxis.set_ticks_position("left")
-  ax_rt.set_ylabel("seconds")
+  ax_rt.set_ylabel("segundos")
 
   ax_prod.yaxis.set_label_position("right")
   ax_prod.yaxis.set_ticks_position("right")
-  ax_prod.set_ylabel("prime/second")
+  ax_prod.set_ylabel("primos/segundo")
 
   fig_rt.legend(loc="upper right")
-  fig_rt.suptitle("Response Time and Production", fontsize=16, fontweight="bold")
+  fig_rt.suptitle("Tiempo de respuesta y productividad", fontsize=16, fontweight="bold")
 
   plt.show()
 
@@ -84,6 +88,10 @@ def cpu_mem_prime_chart(max_primes, cpu_usages, mem_usages):
     plot_cpu.append(cpu_mean)
     plot_mem.append(mem_mean)
     plot_labels.append(str(prime))
+
+  print(plot_labels)
+  print(plot_cpu)
+  print(plot_mem)
 
   positions = np.arange(len(plot_labels))
   width = 0.35
@@ -163,6 +171,6 @@ if __name__ == "__main__":
       mem_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
 
   max_primes = [p for p, _ in tests]
-  rt_prod_chart(max_primes, rt_list)
+  # rt_prod_chart(max_primes, rt_list)
   cpu_mem_prime_chart(max_primes, cpu_usages, mem_usages)
-  for prime, rt, cpu, mem in zip(max_primes, rt_list, cpu_usages, mem_usages): cpu_mem_chart(prime, rt, cpu, mem)
+  # for prime, rt, cpu, mem in zip(max_primes, rt_list, cpu_usages, mem_usages): cpu_mem_chart(prime, rt, cpu, mem)data

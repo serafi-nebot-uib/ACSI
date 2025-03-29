@@ -17,7 +17,7 @@ def cpu() -> tuple[float, float]:
 
 def mem() -> tuple[float, float]:
   with Path("/proc/meminfo").open("r") as f:
-    return float(f.readline().split()[1].split()[0]) * 1024, float(f.readline().split()[1].split()[0]) * 1024
+    return tuple(float(f.readline().split()[1].split()[0]) * 1024 for _ in range(3))
 
 def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_overhead: int = False) -> tuple[float, list[float], list[float]]:
   cmd = ["sysbench", f"--num-threads={num_threads}", "--test=cpu", f"--cpu-max-prime={max_prime}", "run"]
@@ -38,8 +38,8 @@ def load(*, num_threads: int, max_prime: int, monitor_interval: float, print_ove
     cpu_usage.append((1 - idle_diff / total_diff) * 100 if total_diff > 0 else 0)
     cpu_prev = cpu_current
 
-    mem_total, mem_free = mem()
-    mem_usage.append((1 - mem_free / mem_total) * 100)
+    mem_total, _, mem_avail = mem()
+    mem_usage.append((1 - mem_avail / mem_total) * 100)
 
   stdout, *_ = proc.communicate()
   ptrn = re.compile(r"^\s*(total time:)\s*\b(\d+\.\d+)(h|m|s|ms|us)\b")

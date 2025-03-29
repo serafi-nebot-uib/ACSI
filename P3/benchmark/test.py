@@ -153,7 +153,7 @@ def test(threads, max_prime, monitor_interval, load_group_cnt):
 
 if __name__ == "__main__":
   # ci_test()
-  test(threads=12, max_prime=800000, monitor_interval=1, load_group_cnt=LOAD_GROUP_CNT)
+  test(threads=12, max_prime=300000, monitor_interval=1, load_group_cnt=LOAD_GROUP_CNT)
 
 # RESPONSE TIME TESTS @ 9 CPUS (75%)
 # 1200000 60s

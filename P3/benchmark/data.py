@@ -213,7 +213,7 @@ def phase_2():
       mem_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
 
   cpu_cnt = [x[1] for x in tests]
-  cpu_percent = [x[1] / CPU_TOTAL for x in tests]
+  cpu_percent = [x[1] / CPU_TOTAL * 100 for x in tests]
   labels = [f"{x[1] / CPU_TOTAL * 100:.0f}%" for x in tests]
   rt = rt_list
   cpu = cpu_usages
@@ -252,11 +252,11 @@ def phase_2():
 
   print()
 
-  print("rt*cpu")
-  print(f" 25%:  {rt_25 * cpu_percent[0]}")
-  print(f" 50%:  {rt_50 * cpu_percent[1]}")
-  print(f" 75%:  {rt_75 * cpu_percent[2]}")
-  print(f"100%: {rt_100 * cpu_percent[3]}")
+  print("rt/%cpu")
+  print(f" 25%:  {rt_25 / cpu_percent[0]}")
+  print(f" 50%:  {rt_50 / cpu_percent[1]}")
+  print(f" 75%:  {rt_75 / cpu_percent[2]}")
+  print(f"100%: {rt_100 / cpu_percent[3]}")
 
   # print()
   #

@@ -134,7 +134,7 @@ def cpu_mem_chart(prime, rt_list, cpu_usages, mem_usages):
   ax_mem.yaxis.set_ticks_position("left")
   ax_mem.set_ylabel("mem usage (%)")
 
-  for i, rt, cpu, mem in zip(range(n), rt_list, cpu_usages, mem_usages):
+  for i, rt, cpu, mem in zip(range(len(rt_list)), rt_list, cpu_usages, mem_usages):
     ax_cpu.plot(range(len(cpu)), cpu, label=f"load {i+1} ({rt}s)")
     ax_mem.plot(range(len(mem)), mem, label=f"load {i+1} ({rt}s)")
 
@@ -176,9 +176,10 @@ def phase_1():
     rt = [rt_list[i] for i in idx]
     cpu = [cpu_usages[i] for i in idx]
     mem = [mem_usages[i] for i in idx]
-    rt_prod_chart(max_primes, max_primes, rt, xlabel="carga (max prime)")
+    # for p, t in zip(max_primes, rt): print(np.mean(p / np.array(t)))
+    # rt_prod_chart(max_primes, max_primes, rt, xlabel="carga (max prime)")
     # cpu_mem_prime_chart(max_primes, cpu, mem)
-    # for prime, r, c, m in zip(max_primes, rt, cpu, mem): cpu_mem_chart(prime, r, c, m)
+    for prime, r, c, m in zip(max_primes, rt, cpu, mem): cpu_mem_chart(prime, r, c, m)
 
   def part_2():
     idx = [i for i in range(len(tests)) if tests[i][0] == 800000]
@@ -187,8 +188,8 @@ def phase_1():
     rt = [rt_list[i] for i in idx]
     rt_prod_chart(labels, max_primes, rt, xlabel="utilización CPU")
 
-  # part_1()
-  part_2()
+  part_1()
+  # part_2()
 
 def phase_2():
   data_dir = Path("data/phase_2")
@@ -202,7 +203,7 @@ def phase_2():
       resp_times = [float(x) for x in next(reader)]
       n = len(resp_times)
       rt_list.append(resp_times)
-      prod_list.append(800000 / np.mean(resp_times))
+      prod_list.append(800000 / np.array(resp_times))
 
       next(reader)
       next(reader)
@@ -218,55 +219,47 @@ def phase_2():
   rt = rt_list
   cpu = cpu_usages
   mem = mem_usages
+  print(prod_list)
   # rt_prod_chart(labels, [800000] * len(rt), rt, xlabel="utilización CPU")
 
-  rt_25, rt_50, rt_75, rt_100 = [np.mean(x) for x in rt]
-
-  print("  25 / 25: ",  rt_25 / rt_25)
-  print("  25 / 50: ",  rt_25 / rt_50)
-  print("  25 / 75: ",  rt_25 / rt_75)
-  print(" 25 / 100: ", rt_25 / rt_100)
-
-  print("  50 / 25: ",  rt_50 / rt_25)
-  print("  50 / 50: ",  rt_50 / rt_50)
-  print("  50 / 75: ",  rt_50 / rt_75)
-  print(" 50 / 100: ", rt_50 / rt_100)
-
-  print("  75 / 25: ",  rt_75 / rt_25)
-  print("  75 / 50: ",  rt_75 / rt_50)
-  print("  75 / 75: ",  rt_75 / rt_75)
-  print(" 75 / 100: ", rt_75 / rt_100)
-
-  print(" 100 / 25: ",  rt_100 / rt_25)
-  print(" 100 / 50: ",  rt_100 / rt_50)
-  print(" 100 / 75: ",  rt_100 / rt_75)
-  print("100 / 100: ", rt_100 / rt_100)
-
-  print()
-
-  print("rt/cpu")
-  print(f" 25%:  {rt_25 / cpu_cnt[0]}")
-  print(f" 50%:  {rt_50 / cpu_cnt[1]}")
-  print(f" 75%:  {rt_75 / cpu_cnt[2]}")
-  print(f"100%: {rt_100 / cpu_cnt[3]}")
-
-  print()
-
-  print("rt/%cpu")
-  print(f" 25%:  {rt_25 / cpu_percent[0]}")
-  print(f" 50%:  {rt_50 / cpu_percent[1]}")
-  print(f" 75%:  {rt_75 / cpu_percent[2]}")
-  print(f"100%: {rt_100 / cpu_percent[3]}")
-
+  # rt_25, rt_50, rt_75, rt_100 = [np.mean(x) for x in rt]
+  #
+  # print("  25 / 25: ",  rt_25 / rt_25)
+  # print("  25 / 50: ",  rt_25 / rt_50)
+  # print("  25 / 75: ",  rt_25 / rt_75)
+  # print(" 25 / 100: ", rt_25 / rt_100)
+  #
+  # print("  50 / 25: ",  rt_50 / rt_25)
+  # print("  50 / 50: ",  rt_50 / rt_50)
+  # print("  50 / 75: ",  rt_50 / rt_75)
+  # print(" 50 / 100: ", rt_50 / rt_100)
+  #
+  # print("  75 / 25: ",  rt_75 / rt_25)
+  # print("  75 / 50: ",  rt_75 / rt_50)
+  # print("  75 / 75: ",  rt_75 / rt_75)
+  # print(" 75 / 100: ", rt_75 / rt_100)
+  #
+  # print(" 100 / 25: ",  rt_100 / rt_25)
+  # print(" 100 / 50: ",  rt_100 / rt_50)
+  # print(" 100 / 75: ",  rt_100 / rt_75)
+  # print("100 / 100: ", rt_100 / rt_100)
+  #
   # print()
   #
-  # prod_25, prod_50, prod_75, prod_100 = prod_list
-  # print("prod/cpu")
-  # print(f" 25%: {prod_25 / cpu_cnt[0]}")
-  # print(f" 50%: {prod_50 / cpu_cnt[1]}")
-  # print(f" 75%: {prod_75 / cpu_cnt[2]}")
-  # print(f"100%: {prod_100 / cpu_cnt[3]}")
+  # print("rt/cpu")
+  # print(f" 25%:  {rt_25 / cpu_cnt[0]}")
+  # print(f" 50%:  {rt_50 / cpu_cnt[1]}")
+  # print(f" 75%:  {rt_75 / cpu_cnt[2]}")
+  # print(f"100%: {rt_100 / cpu_cnt[3]}")
+  #
+  # print()
+  #
+  # print("rt/%cpu")
+  # print(f" 25%:  {rt_25 / cpu_percent[0]}")
+  # print(f" 50%:  {rt_50 / cpu_percent[1]}")
+  # print(f" 75%:  {rt_75 / cpu_percent[2]}")
+  # print(f"100%: {rt_100 / cpu_percent[3]}")
 
 if __name__ == "__main__":
-  # phase_1()
-  phase_2()
+  phase_1()
+  # phase_2()

@@ -11,6 +11,7 @@ from itertools import zip_longest
 CI = 0.95
 WIDTH = 100
 SEP = "━" * WIDTH
+CPU_TOTAL = 12
 
 def float_str(f) -> str: return ", ".join(f"{x:.4f}" for x in f)
 def np_group_mean(a): return np.array([np.mean([x for x in b if x]) for b in zip_longest(*a)])
@@ -36,10 +37,10 @@ def print_info(rt, rt_mean, ci, ci_lower, ci_upper, ci_coeff, prod=None, cpu_gro
       print(f"    mean mem (%): {np.mean(mem_group):.4f}")
     print(SEP)
 
-def rt_prod_chart(max_primes, resp_times):
-  assert len(max_primes) == len(resp_times)
+def rt_prod_chart(labels, max_primes, resp_times, xlabel=None):
+  assert len(labels) == len(max_primes) == len(resp_times)
 
-  plot_rt, plot_prod, plot_labels = [], [], []
+  plot_rt, plot_prod = [], []
   for prime, rt_list in zip(max_primes, resp_times):
     rt = np.array(rt_list)
     rt_mean = np.mean(rt)
@@ -47,9 +48,8 @@ def rt_prod_chart(max_primes, resp_times):
     prod_mean = np.mean(prod)
     plot_rt.append(float(rt_mean))
     plot_prod.append(float(prod_mean))
-    plot_labels.append(str(prime))
 
-  positions = np.arange(len(plot_labels))
+  positions = np.arange(len(labels))
   width = 0.35
 
   fig_rt, ax_rt = plt.subplots(figsize=(12, 9))
@@ -59,8 +59,8 @@ def rt_prod_chart(max_primes, resp_times):
   print(f"  prod: {plot_prod}")
 
   ax_rt.set_xticks(positions)
-  ax_rt.set_xticklabels(plot_labels)
-  ax_rt.set_xlabel("carga (max prime)")
+  ax_rt.set_xticklabels(labels)
+  if isinstance(xlabel, str): ax_rt.set_xlabel(xlabel)
   ax_prod = ax_rt.twinx()
 
   ax_rt.bar(positions - width/2, plot_rt, width=width, color="blue", label="tiempo respuesta (segundos)")
@@ -149,9 +149,9 @@ def cpu_mem_chart(prime, rt_list, cpu_usages, mem_usages):
 
   plt.show()
 
-if __name__ == "__main__":
-  data_dir = Path("data")
-  tests = [ (300000, 9), (500000, 9), (800000, 9), (1200000, 9) ]
+def phase_1():
+  data_dir = Path("data/phase_1")
+  tests = [ (300000, 9), (500000, 9), (800000, 9), (1200000, 9), (800000, 12) ]
 
   rt_list, cpu_usages, mem_usages = [], [], []
   for max_prime, threads in tests:
@@ -170,7 +170,78 @@ if __name__ == "__main__":
       next(reader)
       mem_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
 
-  max_primes = [p for p, _ in tests]
-  # rt_prod_chart(max_primes, rt_list)
-  cpu_mem_prime_chart(max_primes, cpu_usages, mem_usages)
-  # for prime, rt, cpu, mem in zip(max_primes, rt_list, cpu_usages, mem_usages): cpu_mem_chart(prime, rt, cpu, mem)data
+  def part_1():
+    idx = [i for i in range(len(tests)) if tests[i][1] == 9]
+    max_primes = [tests[i][0] for i in idx]
+    rt = [rt_list[i] for i in idx]
+    cpu = [cpu_usages[i] for i in idx]
+    mem = [mem_usages[i] for i in idx]
+    rt_prod_chart(max_primes, max_primes, rt, xlabel="carga (max prime)")
+    # cpu_mem_prime_chart(max_primes, cpu, mem)
+    # for prime, r, c, m in zip(max_primes, rt, cpu, mem): cpu_mem_chart(prime, r, c, m)
+
+  def part_2():
+    idx = [i for i in range(len(tests)) if tests[i][0] == 800000]
+    labels = [f"{tests[i][1] / CPU_TOTAL * 100:.0f}%" for i in idx]
+    max_primes = [tests[i][0] for i in idx]
+    rt = [rt_list[i] for i in idx]
+    rt_prod_chart(labels, max_primes, rt, xlabel="utilización CPU")
+
+  # part_1()
+  part_2()
+
+def phase_2():
+  data_dir = Path("data/phase_2")
+  tests = [ (800000, 3), (800000, 6), (800000, 9), (800000, 12) ]
+
+  rt_list, cpu_usages, mem_usages = [], [], []
+  for max_prime, threads in tests:
+    with (data_dir / f"{max_prime}-{threads}.csv").open("r") as f:
+      reader = csv.reader(f)
+      next(reader)
+      resp_times = [float(x) for x in next(reader)]
+      n = len(resp_times)
+      rt_list.append(resp_times)
+
+      next(reader)
+      next(reader)
+      cpu_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
+
+      next(reader)
+      next(reader)
+      mem_usages.append([[float(x) for x in next(reader)] for _ in range(n)])
+
+  labels = [f"{x[1] / CPU_TOTAL * 100:.0f}%" for x in tests]
+  rt = rt_list
+  cpu = cpu_usages
+  mem = mem_usages
+  # rt_prod_chart(labels, [800000] * len(rt), rt, xlabel="utilización CPU")
+
+  rt_25 = np.mean(rt[0])
+  rt_50 = np.mean(rt[1])
+  rt_75 = np.mean(rt[2])
+  rt_100 = np.mean(rt[3])
+
+  print(f"25 / 25: ",  rt_25 / rt_25)
+  print(f"25 / 50: ",  rt_25 / rt_50)
+  print(f"25 / 75: ",  rt_25 / rt_75)
+  print(f"25 / 100: ", rt_25 / rt_100)
+
+  print(f"50 / 25: ",  rt_50 / rt_25)
+  print(f"50 / 50: ",  rt_50 / rt_50)
+  print(f"50 / 75: ",  rt_50 / rt_75)
+  print(f"50 / 100: ", rt_50 / rt_100)
+
+  print(f"75 / 25: ",  rt_75 / rt_25)
+  print(f"75 / 50: ",  rt_75 / rt_50)
+  print(f"75 / 75: ",  rt_75 / rt_75)
+  print(f"75 / 100: ", rt_75 / rt_100)
+
+  print(f"100 / 25: ",  rt_100 / rt_25)
+  print(f"100 / 50: ",  rt_100 / rt_50)
+  print(f"100 / 75: ",  rt_100 / rt_75)
+  print(f"100 / 100: ", rt_100 / rt_100)
+
+if __name__ == "__main__":
+  # phase_1()
+  phase_2()

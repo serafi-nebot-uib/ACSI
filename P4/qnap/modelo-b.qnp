@@ -1,0 +1,64 @@
+/DECLARE/ QUEUE CPU,DISC(2),TERMINAL;
+          REAL V_DISC(2)=(7.,1.),V_TERM=1.;
+          REAL V_CPU=V_DISC(1) + V_DISC(2) + V_TERM;
+          REAL V_TOTAL=V_DISC(1) + V_DISC(2) + V_TERM;
+          REAL D_CPU, D_DISC1, D_DISC2;
+          REAL T_R,T_T,T_Z,WORK;
+          INTEGER I,N1;
+/STATION/ NAME=CPU;
+&         SCHED=PS;
+          SERVICE=EXP(0.005);
+          TRANSIT=DISC,V_DISC,TERMINAL,V_TERM;
+/STATION/ NAME=DISC;
+          TRANSIT=CPU;
+/STATION/ NAME=DISC(1);
+          SERVICE=EXP(0.02);
+/STATION/ NAME=DISC(2);
+          SERVICE=EXP(0.3);
+/STATION/ NAME=TERMINAL;
+          TYPE=INFINITE;
+          INIT=N1;
+          SERVICE=EXP(8.);
+          TRANSIT=CPU;
+/CONTROL/ CLASS=ALL QUEUE;
+/EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
+          BEGIN
+            PRINT;
+            PRINT("NUMERO DE USUARIOS=",N1);
+            SOLVE;
+
+            D_CPU := MSERVICE(CPU) * V_CPU;
+            D_DISC1 := MSERVICE(DISC(1)) * V_DISC(1);
+            D_DISC2 := MSERVICE(DISC(2)) * V_DISC(2);
+
+            PRINT("");
+            PRINT("---------- DEMANDAS DE LOS DISPOSITIVOS ----------");
+            PRINT("Demanda CPU   = ", D_CPU);
+            PRINT("Demanda DISC1 = ", D_DISC1);
+            PRINT("Demanda DISC2 = ", D_DISC2);
+            PRINT("---------------------------------------------------");
+
+            T_R := MRESPONSE(CPU) + MRESPONSE(DISC(1)) + MRESPONSE(DISC(2));
+            T_Z := MSERVICE(TERMINAL);
+            T_T := T_R + T_Z;
+            WORK := MTHRUPUT(TERMINAL) * T_Z;
+
+            PRINT("");
+            PRINT("-------------- TIEMPOS DE RESPUESTA ---------------");
+            PRINT("Tiempo de respuesta del sistema (R) = ", T_R);
+            PRINT("Tiempo de reflexion (Z)             = ", T_Z);
+            PRINT("Tiempo TOTAL (R+Z)                  = ", T_T);
+            PRINT("Número de usuarios trabajando       = ", WORK);
+            PRINT("---------------------------------------------------");
+
+            PRINT("");
+            PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ----------");
+            PRINT("Probabilidad CPU -> DISC1    = ", V_DISC(1) / V_TOTAL);
+            PRINT("Probabilidad CPU -> DISC2    = ", V_DISC(2) / V_TOTAL);
+            PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
+            PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
+            PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
+            PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
+            PRINT("----------------------------------------------------");
+          END;
+/END/

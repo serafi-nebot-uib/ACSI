@@ -4,7 +4,7 @@
  
  
       1 /DECLARE/ QUEUE CPU,DISC(2),TERMINAL;
-      2           REAL PROB1(2)=(1.,1.);
+      2           REAL PROB1(2)=(4.,4.);
       3           REAL TTR1,TOTAL,WORK;
       4           INTEGER I,N1;
       5 /STATION/ NAME=CPU;
@@ -14,9 +14,9 @@
       9 /STATION/ NAME=DISC;
      10           TRANSIT=CPU;
      11 /STATION/ NAME=DISC(1);
-     12           SERVICE=EXP(0.1);
+     12           SERVICE=EXP(0.16);
      13 /STATION/ NAME=DISC(2);
-     14           SERVICE=EXP(0.1);
+     14           SERVICE=EXP(0.16);
      15 /STATION/ NAME=TERMINAL;
      16           TYPE=INFINITE;
      17           INIT=N1;
@@ -37,13 +37,13 @@
  *   NAME   *  SERVICE * BUSY PCT *  CUST NB * RESPONSE *  THRUPUT *
  *******************************************************************
  *          *          *          *          *          *          *
- *CPU       *0.5000E-02*0.3626E-01*0.3755E-01*0.5178E-02* 7.252    *
+ *CPU       *0.5000E-02*0.6214E-01*0.6618E-01*0.5326E-02* 12.43    *
  *          *          *          *          *          *          *
- *DISC   1  *0.1000    *0.2417    *0.3124    *0.1292    * 2.417    *
+ *DISC   1  *0.1600    *0.8838    * 4.443    *0.8045    * 5.523    *
  *          *          *          *          *          *          *
- *DISC   2  *0.1000    *0.2417    *0.3124    *0.1292    * 2.417    *
+ *DISC   2  *0.1600    *0.8838    * 4.443    *0.8045    * 5.523    *
  *          *          *          *          *          *          *
- *TERMINAL  * 8.000    *0.0000E+00* 19.34    * 8.000    * 2.417    *
+ *TERMINAL  * 8.000    *0.0000E+00* 11.05    * 8.000    * 1.381    *
  *          *          *          *          *          *          *
  *******************************************************************
               MEMORY USED:       7088 WORDS OF 4 BYTES

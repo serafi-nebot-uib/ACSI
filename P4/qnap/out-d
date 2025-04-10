@@ -1,0 +1,59 @@
+ 
+  SIMULOG   ***  QNAP2  ***  ( 28-02-1999  ) V 9.4   
+  (C)  COPYRIGHT BY CII HONEYWELL BULL AND INRIA, 1986
+ 
+ 
+      1 /DECLARE/ QUEUE CPU(2),DISC(2),TERMINAL;
+      2           REAL PROB_DISC(2)=(7.,1.);
+ (060301)  ==>WARNING (DECLARE) : THIS IDENTIFIER IS TOO LONG
+                                  (TRUNCATED) : PROB_DIS
+      3           REAL PROB_CPU(2)=(0.5,0.5);
+      4           REAL TTR1,TOTAL,WORK;
+      5           INTEGER I,N1;
+      6 /STATION/ NAME=CPU;
+      7 &         SCHED=PS;
+      8           TRANSIT=DISC,PROB_DISC,TERMINAL,1;
+      9 /STATION/ NAME=CPU(1);
+     10           SERVICE=EXP(0.005);
+     11 /STATION/ NAME=CPU(2);
+     12           SERVICE=EXP(0.005);
+     13 /STATION/ NAME=DISC;
+     14           TRANSIT=CPU,PROB_CPU;
+     15 /STATION/ NAME=DISC(1);
+     16           SERVICE=EXP(0.02);
+     17 /STATION/ NAME=DISC(2);
+     18           SERVICE=EXP(0.3);
+     19 /STATION/ NAME=TERMINAL;
+     20           TYPE=INFINITE;
+     21           INIT=N1;
+     22           SERVICE=EXP(8.);
+     23           TRANSIT=CPU,PROB_CPU;
+     24 /CONTROL/ CLASS=ALL QUEUE;
+     25 /EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
+     26           BEGIN
+     27             PRINT;
+     28             PRINT("NUMERO DE USUARIOS=",N1);
+     29             SOLVE;
+     30           END;
+ 
+1
+ NUMERO DE USUARIOS=       20 
+ - MEAN VALUE ANALYSIS ("MVA") -
+ *******************************************************************
+ *   NAME   *  SERVICE * BUSY PCT *  CUST NB * RESPONSE *  THRUPUT *
+ *******************************************************************
+ *          *          *          *          *          *          *
+ *CPU    1  *0.5000E-02*0.5006E-01*0.5256E-01*0.5250E-02* 10.01    *
+ *          *          *          *          *          *          *
+ *CPU    2  *0.5000E-02*0.5006E-01*0.5256E-01*0.5250E-02* 10.01    *
+ *          *          *          *          *          *          *
+ *DISC   1  *0.2000E-01*0.3115    *0.4398    *0.2824E-01* 15.57    *
+ *          *          *          *          *          *          *
+ *DISC   2  *0.3000    *0.6674    * 1.658    *0.7452    * 2.225    *
+ *          *          *          *          *          *          *
+ *TERMINAL  * 8.000    *0.0000E+00* 17.80    * 8.000    * 2.225    *
+ *          *          *          *          *          *          *
+ *******************************************************************
+              MEMORY USED:       7442 WORDS OF 4 BYTES
+               (  0.15  % OF TOTAL MEMORY)
+     31 /END/

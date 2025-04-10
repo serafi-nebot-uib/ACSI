@@ -1,0 +1,46 @@
+ 
+  SIMULOG   ***  QNAP2  ***  ( 28-02-1999  ) V 9.4   
+  (C)  COPYRIGHT BY CII HONEYWELL BULL AND INRIA, 1986
+ 
+ 
+      1 /DECLARE/ QUEUE CPU,DISC,TERMINAL;
+      2           REAL PROB1=8.;
+      3           REAL TTR1,TOTAL,WORK;
+      4           INTEGER I,N1;
+      5 /STATION/ NAME=CPU;
+      6 &         SCHED=PS;
+      7           SERVICE=EXP(0.005);
+      8           TRANSIT=DISC,PROB1,TERMINAL,1;
+      9 /STATION/ NAME=DISC;
+     10           TRANSIT=CPU;
+     11           SERVICE=EXP(0.02);
+     12 /STATION/ NAME=TERMINAL;
+     13           TYPE=INFINITE;
+     14           INIT=N1;
+     15           SERVICE=EXP(8.);
+     16           TRANSIT=CPU;
+     17 /CONTROL/ CLASS=ALL QUEUE;
+     18 /EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
+     19           BEGIN
+     20             PRINT;
+     21             PRINT("NUMERO DE USUARIOS=",N1);
+     22             SOLVE;
+     23           END;
+ 
+1
+ NUMERO DE USUARIOS=       20 
+ - MEAN VALUE ANALYSIS ("MVA") -
+ *******************************************************************
+ *   NAME   *  SERVICE * BUSY PCT *  CUST NB * RESPONSE *  THRUPUT *
+ *******************************************************************
+ *          *          *          *          *          *          *
+ *CPU       *0.5000E-02*0.1084    *0.1208    *0.5571E-02* 21.69    *
+ *          *          *          *          *          *          *
+ *DISC      *0.2000E-01*0.3856    *0.5992    *0.3108E-01* 19.28    *
+ *          *          *          *          *          *          *
+ *TERMINAL  * 8.000    *0.0000E+00* 19.28    * 8.000    * 2.410    *
+ *          *          *          *          *          *          *
+ *******************************************************************
+              MEMORY USED:       6784 WORDS OF 4 BYTES
+               (  0.14  % OF TOTAL MEMORY)
+     24 /END/

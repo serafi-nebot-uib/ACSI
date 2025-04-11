@@ -28,8 +28,7 @@
      23             PRINT;
      24             PRINT("NUMERO DE USUARIOS=",N1);
      25             SOLVE;
-     26             PRINT("R = ", MRESPONSE(CPU) + MRESPONSE(DISC(1)) + MRESPONS
-E(DISC(2)));
+     26             PRINT("R = ", N1 / MTHRUPUT(TERMINAL) - MSERVICE(TERMINAL));
      27           END;
  
 1
@@ -48,9 +47,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 8.245    * 4.000    * 2.061    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7132 WORDS OF 4 BYTES
+              MEMORY USED:       7122 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
- R =   0.6470    
+ R =   0.8516    
  
 1
  NUMERO DE USUARIOS=       20 
@@ -68,9 +67,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 12.85    * 4.000    * 3.213    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7155 WORDS OF 4 BYTES
+              MEMORY USED:       7145 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
- R =    1.966    
+ R =    2.225    
  
 1
  NUMERO DE USUARIOS=       30 
@@ -88,9 +87,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7178 WORDS OF 4 BYTES
+              MEMORY USED:       7168 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
- R =    4.730    
+ R =    5.002    
  
 1
  NUMERO DE USUARIOS=       40 
@@ -108,9 +107,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7201 WORDS OF 4 BYTES
+              MEMORY USED:       7191 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
- R =    7.728    
+ R =    8.000    
  
 1
  NUMERO DE USUARIOS=       50 
@@ -128,9 +127,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7224 WORDS OF 4 BYTES
+              MEMORY USED:       7214 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
- R =    10.73    
+ R =    11.00    
  
 1
  NUMERO DE USUARIOS=       60 
@@ -148,9 +147,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7247 WORDS OF 4 BYTES
+              MEMORY USED:       7237 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
- R =    13.73    
+ R =    14.00    
  
 1
  NUMERO DE USUARIOS=       70 
@@ -168,9 +167,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7270 WORDS OF 4 BYTES
+              MEMORY USED:       7260 WORDS OF 4 BYTES
                (  0.15  % OF TOTAL MEMORY)
- R =    16.73    
+ R =    17.00    
  
 1
  NUMERO DE USUARIOS=       80 
@@ -188,9 +187,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7293 WORDS OF 4 BYTES
+              MEMORY USED:       7283 WORDS OF 4 BYTES
                (  0.15  % OF TOTAL MEMORY)
- R =    19.73    
+ R =    20.00    
  
 1
  NUMERO DE USUARIOS=       90 
@@ -208,9 +207,9 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7316 WORDS OF 4 BYTES
+              MEMORY USED:       7306 WORDS OF 4 BYTES
                (  0.15  % OF TOTAL MEMORY)
- R =    22.73    
+ R =    23.00    
  
 1
  NUMERO DE USUARIOS=      100 
@@ -228,7 +227,7 @@ E(DISC(2)));
  *TERMINAL  * 4.000    *0.0000E+00* 13.33    * 4.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7339 WORDS OF 4 BYTES
+              MEMORY USED:       7329 WORDS OF 4 BYTES
                (  0.15  % OF TOTAL MEMORY)
- R =    25.73    
+ R =    26.00    
      28 /END/

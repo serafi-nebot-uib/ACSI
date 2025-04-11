@@ -38,8 +38,8 @@
             PRINT("Demanda DISC2 = ", D_DISC2);
             PRINT("---------------------------------------------------");
 
-            T_R := MRESPONSE(CPU) + MRESPONSE(DISC(1)) + MRESPONSE(DISC(2));
             T_Z := MSERVICE(TERMINAL);
+            T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
             T_T := T_R + T_Z;
             WORK := MTHRUPUT(TERMINAL) * T_Z;
 

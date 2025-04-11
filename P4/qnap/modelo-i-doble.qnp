@@ -23,7 +23,7 @@
             PRINT;
             PRINT("NUMERO DE USUARIOS=",N1);
             SOLVE;
-            PRINT("R = ", MRESPONSE(CPU) + MRESPONSE(DISC(1)) + MRESPONSE(DISC(2)));
+            PRINT("R = ", N1 / MTHRUPUT(TERMINAL) - MSERVICE(TERMINAL));
           END;
 /END/
 

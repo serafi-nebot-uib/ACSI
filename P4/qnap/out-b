@@ -44,9 +44,8 @@
      39             PRINT("---------------------------------------------------")
 ;
      40  
-     41             T_R := MRESPONSE(CPU) + MRESPONSE(DISC(1)) + MRESPONSE(DISC(
-2));
-     42             T_Z := MSERVICE(TERMINAL);
+     41             T_Z := MSERVICE(TERMINAL);
+     42             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
      43             T_T := T_R + T_Z;
      44             WORK := MTHRUPUT(TERMINAL) * T_Z;
      45  
@@ -91,8 +90,8 @@
  *TERMINAL  * 8.000    *0.0000E+00* 17.79    * 8.000    * 2.224    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7762 WORDS OF 4 BYTES
-               (  0.16  % OF TOTAL MEMORY)
+              MEMORY USED:       7748 WORDS OF 4 BYTES
+               (  0.15  % OF TOTAL MEMORY)
  
  ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
  Demanda CPU   =   0.4500E-01
@@ -101,9 +100,9 @@
  ---------------------------------------------------
  
  -------------- TIEMPOS DE RESPUESTA ---------------
- Tiempo de respuesta del sistema (R) =   0.7787    
+ Tiempo de respuesta del sistema (R) =   0.9923    
  Tiempo de reflexion (Z)             =    8.000    
- Tiempo TOTAL (R+Z)                  =    8.779    
+ Tiempo TOTAL (R+Z)                  =    8.992    
  Número de usuarios trabajando       =    17.79    
  ---------------------------------------------------
  

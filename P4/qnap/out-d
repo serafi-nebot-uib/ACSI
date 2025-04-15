@@ -4,37 +4,74 @@
  
  
       1 /DECLARE/ QUEUE CPU(2),DISC(2),TERMINAL;
-      2           REAL PROB_DISC(2)=(7.,1.);
- (060301)  ==>WARNING (DECLARE) : THIS IDENTIFIER IS TOO LONG
-                                  (TRUNCATED) : PROB_DIS
-      3           REAL PROB_CPU(2)=(0.5,0.5);
-      4           REAL TTR1,TOTAL,WORK;
-      5           INTEGER I,N1;
-      6 /STATION/ NAME=CPU;
-      7 &         SCHED=PS;
-      8           TRANSIT=DISC,PROB_DISC,TERMINAL,1;
-      9 /STATION/ NAME=CPU(1);
-     10           SERVICE=EXP(0.005);
-     11 /STATION/ NAME=CPU(2);
-     12           SERVICE=EXP(0.005);
-     13 /STATION/ NAME=DISC;
-     14           TRANSIT=CPU,PROB_CPU;
-     15 /STATION/ NAME=DISC(1);
-     16           SERVICE=EXP(0.02);
-     17 /STATION/ NAME=DISC(2);
-     18           SERVICE=EXP(0.3);
-     19 /STATION/ NAME=TERMINAL;
-     20           TYPE=INFINITE;
-     21           INIT=N1;
-     22           SERVICE=EXP(8.);
-     23           TRANSIT=CPU,PROB_CPU;
-     24 /CONTROL/ CLASS=ALL QUEUE;
-     25 /EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
-     26           BEGIN
-     27             PRINT;
-     28             PRINT("NUMERO DE USUARIOS=",N1);
-     29             SOLVE;
-     30           END;
+      2           REAL V_DISC(2)=(7.,1.),V_TERM=1.;
+      3           REAL V_TOTAL=V_DISC(1) + V_DISC(2) + V_TERM;
+      4           REAL V_CPU(2)=(V_TOTAL/2, V_TOTAL/2);
+      5           REAL T_R,T_T,T_Z,WORK;
+      6           INTEGER I,N1;
+      7 /STATION/ NAME=CPU;
+      8 &         SCHED=PS;
+      9           TRANSIT=DISC,V_DISC,TERMINAL,1;
+     10 /STATION/ NAME=CPU(1);
+     11           SERVICE=EXP(0.005);
+     12 /STATION/ NAME=CPU(2);
+     13           SERVICE=EXP(0.005);
+     14 /STATION/ NAME=DISC;
+     15           TRANSIT=CPU,V_CPU;
+     16 /STATION/ NAME=DISC(1);
+     17           SERVICE=EXP(0.02);
+     18 /STATION/ NAME=DISC(2);
+     19           SERVICE=EXP(0.3);
+     20 /STATION/ NAME=TERMINAL;
+     21           TYPE=INFINITE;
+     22           INIT=N1;
+     23           SERVICE=EXP(8.);
+     24           TRANSIT=CPU,V_CPU;
+     25 /CONTROL/ CLASS=ALL QUEUE;
+     26 /EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
+     27           BEGIN
+     28             PRINT;
+     29             PRINT("NUMERO DE USUARIOS=",N1);
+     30             SOLVE;
+     31  
+     32             PRINT("");
+     33             PRINT("---------- DEMANDAS DE LOS DISPOSITIVOS ----------");
+     34             PRINT("Demanda CPU1  = ", MSERVICE(CPU(1)) * V_CPU(1));
+     35             PRINT("Demanda CPU2  = ", MSERVICE(CPU(2)) * V_CPU(2));
+     36             PRINT("Demanda DISC1 = ", MSERVICE(DISC(1)) * V_DISC(1));
+     37             PRINT("Demanda DISC2 = ", MSERVICE(DISC(2)) * V_DISC(2));
+     38             PRINT("---------------------------------------------------")
+;
+     39  
+     40             T_Z := MSERVICE(TERMINAL);
+     41             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
+     42             T_T := T_R + T_Z;
+     43             WORK := MTHRUPUT(TERMINAL) * T_Z;
+     44  
+     45             PRINT("");
+     46             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------")
+;
+     47             PRINT("Tiempo de respuesta del sistema (R) = ", T_R);
+     48             PRINT("Tiempo de reflexion (Z)             = ", T_Z);
+     49             PRINT("Tiempo TOTAL (R+Z)                  = ", T_T);
+     50             PRINT("Número de usuarios trabajando       = ", WORK);
+     51             PRINT("---------------------------------------------------")
+;
+     52  
+     53             PRINT("");
+     54             PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ---------
+-");
+     55             PRINT("Probabilidad CPU -> DISC1    = ", V_DISC(1) / V_TOTAL
+);
+     56             PRINT("Probabilidad CPU -> DISC2    = ", V_DISC(2) / V_TOTAL
+);
+     57             PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
+     58             PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
+     59             PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
+     60             PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
+     61             PRINT("----------------------------------------------------"
+);
+     62           END;
  
 1
  NUMERO DE USUARIOS=       20 
@@ -54,6 +91,29 @@
  *TERMINAL  * 8.000    *0.0000E+00* 17.80    * 8.000    * 2.225    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7442 WORDS OF 4 BYTES
-               (  0.15  % OF TOTAL MEMORY)
-     31 /END/
+              MEMORY USED:       8062 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU1  =   0.2250E-01
+ Demanda CPU2  =   0.2250E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =   0.9901    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    8.990    
+ Número de usuarios trabajando       =    17.80    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
+     63 /END/

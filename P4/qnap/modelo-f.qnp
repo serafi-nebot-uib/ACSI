@@ -1,11 +1,13 @@
 /DECLARE/ QUEUE CPU,DISC,TERMINAL;
-          REAL PROB1=8.;
-          REAL TTR1,TOTAL,WORK;
+          REAL V_DISC=8.,V_TERM=1.;
+          REAL V_CPU=V_DISC + V_TERM;
+          REAL V_TOTAL=V_DISC + V_TERM;
+          REAL T_R,T_T,T_Z,WORK;
           INTEGER I,N1;
 /STATION/ NAME=CPU;
 &         SCHED=PS;
           SERVICE=EXP(0.005);
-          TRANSIT=DISC,PROB1,TERMINAL,1;
+          TRANSIT=DISC,V_DISC,TERMINAL,1;
 /STATION/ NAME=DISC;
           TRANSIT=CPU;
           SERVICE=EXP(0.02);
@@ -20,5 +22,33 @@
             PRINT;
             PRINT("NUMERO DE USUARIOS=",N1);
             SOLVE;
+
+            PRINT("");
+            PRINT("---------- DEMANDAS DE LOS DISPOSITIVOS ----------");
+            PRINT("Demanda CPU   = ", MSERVICE(CPU) * V_CPU);
+            PRINT("Demanda DISC = ", MSERVICE(DISC) * V_DISC);
+            PRINT("---------------------------------------------------");
+
+            T_Z := MSERVICE(TERMINAL);
+            T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
+            T_T := T_R + T_Z;
+            WORK := MTHRUPUT(TERMINAL) * T_Z;
+
+            PRINT("");
+            PRINT("-------------- TIEMPOS DE RESPUESTA ---------------");
+            PRINT("Tiempo de respuesta del sistema (R) = ", T_R);
+            PRINT("Tiempo de reflexion (Z)             = ", T_Z);
+            PRINT("Tiempo TOTAL (R+Z)                  = ", T_T);
+            PRINT("Número de usuarios trabajando       = ", WORK);
+            PRINT("---------------------------------------------------");
+
+            PRINT("");
+            PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ----------");
+            PRINT("Probabilidad CPU -> DISC    = ", V_DISC / V_TOTAL);
+            PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
+            PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
+            PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
+            PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
+            PRINT("----------------------------------------------------");
           END;
 /END/

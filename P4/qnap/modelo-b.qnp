@@ -2,7 +2,6 @@
           REAL V_DISC(2)=(7.,1.),V_TERM=1.;
           REAL V_CPU=V_DISC(1) + V_DISC(2) + V_TERM;
           REAL V_TOTAL=V_DISC(1) + V_DISC(2) + V_TERM;
-          REAL D_CPU, D_DISC1, D_DISC2;
           REAL T_R,T_T,T_Z,WORK;
           INTEGER I,N1;
 /STATION/ NAME=CPU;
@@ -27,15 +26,11 @@
             PRINT("NUMERO DE USUARIOS=",N1);
             SOLVE;
 
-            D_CPU := MSERVICE(CPU) * V_CPU;
-            D_DISC1 := MSERVICE(DISC(1)) * V_DISC(1);
-            D_DISC2 := MSERVICE(DISC(2)) * V_DISC(2);
-
             PRINT("");
             PRINT("---------- DEMANDAS DE LOS DISPOSITIVOS ----------");
-            PRINT("Demanda CPU   = ", D_CPU);
-            PRINT("Demanda DISC1 = ", D_DISC1);
-            PRINT("Demanda DISC2 = ", D_DISC2);
+            PRINT("Demanda CPU   = ", MSERVICE(CPU) * V_CPU);
+            PRINT("Demanda DISC1 = ", MSERVICE(DISC(1)) * V_DISC(1));
+            PRINT("Demanda DISC2 = ", MSERVICE(DISC(2)) * V_DISC(2));
             PRINT("---------------------------------------------------");
 
             T_Z := MSERVICE(TERMINAL);

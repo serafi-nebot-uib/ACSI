@@ -4,32 +4,70 @@
  
  
       1 /DECLARE/ QUEUE CPU,DISC(2),TERMINAL;
-      2           REAL PROB1(2)=(7.,1.);
-      3           REAL TTR1,TOTAL,WORK;
-      4           INTEGER I,N1;
-      5 /STATION/ NAME=CPU;
-      6 &         SCHED=PS;
-      7           SERVICE=EXP(0.005);
-      8           TRANSIT=DISC,PROB1,TERMINAL,1;
-      9 /STATION/ NAME=DISC;
-     10           TRANSIT=CPU;
-     11 /STATION/ NAME=DISC(1);
-     12           SERVICE=EXP(0.02);
-     13 /STATION/ NAME=DISC(2);
-     14           SERVICE=EXP(0.3);
-     15 /STATION/ NAME=TERMINAL;
-     16           TYPE=INFINITE;
-     17           INIT=N1;
-     18           SERVICE=EXP(8.);
-     19           TRANSIT=CPU;
-     20 /CONTROL/ CLASS=ALL QUEUE;
-     21 /EXEC/    FOR N1:=10 STEP 10 UNTIL 100 DO
-     22           BEGIN
-     23             PRINT;
-     24             PRINT("NUMERO DE USUARIOS=",N1);
-     25             SOLVE;
-     26             PRINT("R = ", N1 / MTHRUPUT(TERMINAL) - MSERVICE(TERMINAL));
-     27           END;
+      2           REAL V_DISC(2)=(7.,1.),V_TERM=1.;
+      3           REAL V_CPU=V_DISC(1) + V_DISC(2) + V_TERM;
+      4           REAL V_TOTAL=V_DISC(1) + V_DISC(2) + V_TERM;
+      5           REAL T_R,T_T,T_Z,WORK;
+      6           INTEGER I,N1;
+      7 /STATION/ NAME=CPU;
+      8 &         SCHED=PS;
+      9           SERVICE=EXP(0.005);
+     10           TRANSIT=DISC,V_DISC,TERMINAL,1;
+     11 /STATION/ NAME=DISC;
+     12           TRANSIT=CPU;
+     13 /STATION/ NAME=DISC(1);
+     14           SERVICE=EXP(0.02);
+     15 /STATION/ NAME=DISC(2);
+     16           SERVICE=EXP(0.3);
+     17 /STATION/ NAME=TERMINAL;
+     18           TYPE=INFINITE;
+     19           INIT=N1;
+     20           SERVICE=EXP(8.);
+     21           TRANSIT=CPU;
+     22 /CONTROL/ CLASS=ALL QUEUE;
+     23 /EXEC/    FOR N1:=10 STEP 10 UNTIL 100 DO
+     24           BEGIN
+     25             PRINT;
+     26             PRINT("NUMERO DE USUARIOS=",N1);
+     27             SOLVE;
+     28  
+     29             PRINT("");
+     30             PRINT("---------- DEMANDAS DE LOS DISPOSITIVOS ----------");
+     31             PRINT("Demanda CPU   = ", MSERVICE(CPU) * V_CPU);
+     32             PRINT("Demanda DISC1 = ", MSERVICE(DISC(1)) * V_DISC(1));
+     33             PRINT("Demanda DISC2 = ", MSERVICE(DISC(2)) * V_DISC(2));
+     34             PRINT("---------------------------------------------------")
+;
+     35  
+     36             T_Z := MSERVICE(TERMINAL);
+     37             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
+     38             T_T := T_R + T_Z;
+     39             WORK := MTHRUPUT(TERMINAL) * T_Z;
+     40  
+     41             PRINT("");
+     42             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------")
+;
+     43             PRINT("Tiempo de respuesta del sistema (R) = ", T_R);
+     44             PRINT("Tiempo de reflexion (Z)             = ", T_Z);
+     45             PRINT("Tiempo TOTAL (R+Z)                  = ", T_T);
+     46             PRINT("Número de usuarios trabajando       = ", WORK);
+     47             PRINT("---------------------------------------------------")
+;
+     48  
+     49             PRINT("");
+     50             PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ---------
+-");
+     51             PRINT("Probabilidad CPU -> DISC1    = ", V_DISC(1) / V_TOTAL
+);
+     52             PRINT("Probabilidad CPU -> DISC2    = ", V_DISC(2) / V_TOTAL
+);
+     53             PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
+     54             PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
+     55             PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
+     56             PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
+     57             PRINT("----------------------------------------------------"
+);
+     58           END;
  
 1
  NUMERO DE USUARIOS=       10 
@@ -47,9 +85,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 9.260    * 8.000    * 1.158    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7122 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
- R =   0.6390    
+              MEMORY USED:       7704 WORDS OF 4 BYTES
+               (  0.15  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =   0.6390    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    8.639    
+ Número de usuarios trabajando       =    9.260    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       20 
@@ -67,9 +126,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 17.79    * 8.000    * 2.224    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7145 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
- R =   0.9923    
+              MEMORY USED:       7727 WORDS OF 4 BYTES
+               (  0.15  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =   0.9923    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    8.992    
+ Número de usuarios trabajando       =    17.79    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       30 
@@ -87,9 +167,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 24.20    * 8.000    * 3.025    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7168 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
- R =    1.917    
+              MEMORY USED:       7750 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    1.917    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    9.917    
+ Número de usuarios trabajando       =    24.20    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       40 
@@ -107,9 +208,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.50    * 8.000    * 3.313    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7191 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
- R =    4.075    
+              MEMORY USED:       7773 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    4.075    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    12.07    
+ Número de usuarios trabajando       =    26.50    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       50 
@@ -127,9 +249,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.67    * 8.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7214 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
- R =    7.001    
+              MEMORY USED:       7796 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    7.001    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    15.00    
+ Número de usuarios trabajando       =    26.67    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       60 
@@ -147,9 +290,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.67    * 8.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7237 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
- R =    10.00    
+              MEMORY USED:       7819 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    10.00    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    18.00    
+ Número de usuarios trabajando       =    26.67    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       70 
@@ -167,9 +331,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.67    * 8.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7260 WORDS OF 4 BYTES
-               (  0.15  % OF TOTAL MEMORY)
- R =    13.00    
+              MEMORY USED:       7842 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    13.00    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    21.00    
+ Número de usuarios trabajando       =    26.67    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       80 
@@ -187,9 +372,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.67    * 8.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7283 WORDS OF 4 BYTES
-               (  0.15  % OF TOTAL MEMORY)
- R =    16.00    
+              MEMORY USED:       7865 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    16.00    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    24.00    
+ Número de usuarios trabajando       =    26.67    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=       90 
@@ -207,9 +413,30 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.67    * 8.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7306 WORDS OF 4 BYTES
-               (  0.15  % OF TOTAL MEMORY)
- R =    19.00    
+              MEMORY USED:       7888 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    19.00    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    27.00    
+ Número de usuarios trabajando       =    26.67    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
  
 1
  NUMERO DE USUARIOS=      100 
@@ -227,7 +454,28 @@
  *TERMINAL  * 8.000    *0.0000E+00* 26.67    * 8.000    * 3.333    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7329 WORDS OF 4 BYTES
-               (  0.15  % OF TOTAL MEMORY)
- R =    22.00    
-     28 /END/
+              MEMORY USED:       7911 WORDS OF 4 BYTES
+               (  0.16  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC1 =   0.1400    
+ Demanda DISC2 =   0.3000    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =    22.00    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    30.00    
+ Número de usuarios trabajando       =    26.67    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC1    =   0.7778    
+ Probabilidad CPU -> DISC2    =   0.1111    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
+     59 /END/

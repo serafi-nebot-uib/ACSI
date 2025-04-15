@@ -4,28 +4,63 @@
  
  
       1 /DECLARE/ QUEUE CPU,DISC,TERMINAL;
-      2           REAL PROB1=8.;
-      3           REAL TTR1,TOTAL,WORK;
-      4           INTEGER I,N1;
-      5 /STATION/ NAME=CPU;
-      6 &         SCHED=PS;
-      7           SERVICE=EXP(0.005);
-      8           TRANSIT=DISC,PROB1,TERMINAL,1;
-      9 /STATION/ NAME=DISC;
-     10           TRANSIT=CPU;
-     11           SERVICE=EXP(0.02);
-     12 /STATION/ NAME=TERMINAL;
-     13           TYPE=INFINITE;
-     14           INIT=N1;
-     15           SERVICE=EXP(8.);
-     16           TRANSIT=CPU;
-     17 /CONTROL/ CLASS=ALL QUEUE;
-     18 /EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
-     19           BEGIN
-     20             PRINT;
-     21             PRINT("NUMERO DE USUARIOS=",N1);
-     22             SOLVE;
-     23           END;
+      2           REAL V_DISC=8.,V_TERM=1.;
+      3           REAL V_CPU=V_DISC + V_TERM;
+      4           REAL V_TOTAL=V_DISC + V_TERM;
+      5           REAL T_R,T_T,T_Z,WORK;
+      6           INTEGER I,N1;
+      7 /STATION/ NAME=CPU;
+      8 &         SCHED=PS;
+      9           SERVICE=EXP(0.005);
+     10           TRANSIT=DISC,V_DISC,TERMINAL,1;
+     11 /STATION/ NAME=DISC;
+     12           TRANSIT=CPU;
+     13           SERVICE=EXP(0.02);
+     14 /STATION/ NAME=TERMINAL;
+     15           TYPE=INFINITE;
+     16           INIT=N1;
+     17           SERVICE=EXP(8.);
+     18           TRANSIT=CPU;
+     19 /CONTROL/ CLASS=ALL QUEUE;
+     20 /EXEC/    FOR N1:=20 STEP 10 UNTIL 20 DO
+     21           BEGIN
+     22             PRINT;
+     23             PRINT("NUMERO DE USUARIOS=",N1);
+     24             SOLVE;
+     25  
+     26             PRINT("");
+     27             PRINT("---------- DEMANDAS DE LOS DISPOSITIVOS ----------");
+     28             PRINT("Demanda CPU   = ", MSERVICE(CPU) * V_CPU);
+     29             PRINT("Demanda DISC = ", MSERVICE(DISC) * V_DISC);
+     30             PRINT("---------------------------------------------------")
+;
+     31  
+     32             T_Z := MSERVICE(TERMINAL);
+     33             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
+     34             T_T := T_R + T_Z;
+     35             WORK := MTHRUPUT(TERMINAL) * T_Z;
+     36  
+     37             PRINT("");
+     38             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------")
+;
+     39             PRINT("Tiempo de respuesta del sistema (R) = ", T_R);
+     40             PRINT("Tiempo de reflexion (Z)             = ", T_Z);
+     41             PRINT("Tiempo TOTAL (R+Z)                  = ", T_T);
+     42             PRINT("Número de usuarios trabajando       = ", WORK);
+     43             PRINT("---------------------------------------------------")
+;
+     44  
+     45             PRINT("");
+     46             PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ---------
+-");
+     47             PRINT("Probabilidad CPU -> DISC    = ", V_DISC / V_TOTAL);
+     48             PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
+     49             PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
+     50             PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
+     51             PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
+     52             PRINT("----------------------------------------------------"
+);
+     53           END;
  
 1
  NUMERO DE USUARIOS=       20 
@@ -41,6 +76,26 @@
  *TERMINAL  * 8.000    *0.0000E+00* 19.28    * 8.000    * 2.410    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       6784 WORDS OF 4 BYTES
-               (  0.14  % OF TOTAL MEMORY)
-     24 /END/
+              MEMORY USED:       7294 WORDS OF 4 BYTES
+               (  0.15  % OF TOTAL MEMORY)
+ 
+ ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
+ Demanda CPU   =   0.4500E-01
+ Demanda DISC =   0.1600    
+ ---------------------------------------------------
+ 
+ -------------- TIEMPOS DE RESPUESTA ---------------
+ Tiempo de respuesta del sistema (R) =   0.2988    
+ Tiempo de reflexion (Z)             =    8.000    
+ Tiempo TOTAL (R+Z)                  =    8.299    
+ Número de usuarios trabajando       =    19.28    
+ ---------------------------------------------------
+ 
+ ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
+ Probabilidad CPU -> DISC    =   0.8889    
+ Probabilidad CPU -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU    =    1.000    
+ Probabilidad DISC2 -> CPU    =    1.000    
+ Probabilidad TERMINAL -> CPU =    1.000    
+ ----------------------------------------------------
+     54 /END/

@@ -38,7 +38,7 @@
      32             T_Z := MSERVICE(TERMINAL);
      33             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
      34             T_T := T_R + T_Z;
-     35             WORK := MTHRUPUT(TERMINAL) * T_Z;
+     35             WORK := MTHRUPUT(TERMINAL) * T_R;
      36  
      37             PRINT("");
      38             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------")
@@ -88,7 +88,7 @@
  Tiempo de respuesta del sistema (R) =   0.9912    
  Tiempo de reflexion (Z)             =    8.000    
  Tiempo TOTAL (R+Z)                  =    8.991    
- Número de usuarios trabajando       =    17.80    
+ Número de usuarios trabajando       =    2.205    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------

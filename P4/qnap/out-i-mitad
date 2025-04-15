@@ -42,7 +42,7 @@
      36             T_Z := MSERVICE(TERMINAL);
      37             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
      38             T_T := T_R + T_Z;
-     39             WORK := MTHRUPUT(TERMINAL) * T_Z;
+     39             WORK := MTHRUPUT(TERMINAL) * T_R;
      40  
      41             PRINT("");
      42             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------")
@@ -98,7 +98,7 @@
  Tiempo de respuesta del sistema (R) =   0.8516    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    4.852    
- Número de usuarios trabajando       =    8.245    
+ Número de usuarios trabajando       =    1.755    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -139,7 +139,7 @@
  Tiempo de respuesta del sistema (R) =    2.225    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    6.225    
- Número de usuarios trabajando       =    12.85    
+ Número de usuarios trabajando       =    7.149    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -180,7 +180,7 @@
  Tiempo de respuesta del sistema (R) =    5.002    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    9.002    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    16.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -221,7 +221,7 @@
  Tiempo de respuesta del sistema (R) =    8.000    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    12.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    26.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -262,7 +262,7 @@
  Tiempo de respuesta del sistema (R) =    11.00    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    15.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    36.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -303,7 +303,7 @@
  Tiempo de respuesta del sistema (R) =    14.00    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    18.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    46.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -344,7 +344,7 @@
  Tiempo de respuesta del sistema (R) =    17.00    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    21.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    56.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -385,7 +385,7 @@
  Tiempo de respuesta del sistema (R) =    20.00    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    24.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    66.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -426,7 +426,7 @@
  Tiempo de respuesta del sistema (R) =    23.00    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    27.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    76.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
@@ -467,7 +467,7 @@
  Tiempo de respuesta del sistema (R) =    26.00    
  Tiempo de reflexion (Z)             =    4.000    
  Tiempo TOTAL (R+Z)                  =    30.00    
- Número de usuarios trabajando       =    13.33    
+ Número de usuarios trabajando       =    86.67    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------

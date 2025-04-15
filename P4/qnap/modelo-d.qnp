@@ -40,7 +40,7 @@
             T_Z := MSERVICE(TERMINAL);
             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
             T_T := T_R + T_Z;
-            WORK := MTHRUPUT(TERMINAL) * T_Z;
+            WORK := MTHRUPUT(TERMINAL) * T_R;
 
             PRINT("");
             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------");
@@ -52,12 +52,18 @@
 
             PRINT("");
             PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ----------");
-            PRINT("Probabilidad CPU -> DISC1    = ", V_DISC(1) / V_TOTAL);
-            PRINT("Probabilidad CPU -> DISC2    = ", V_DISC(2) / V_TOTAL);
-            PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
-            PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
-            PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
-            PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
+            PRINT("Probabilidad CPU1 -> DISC1    = ", V_DISC(1) / V_TOTAL);
+            PRINT("Probabilidad CPU1 -> DISC2    = ", V_DISC(2) / V_TOTAL);
+            PRINT("Probabilidad CPU1 -> TERMINAL = ", V_TERM / V_TOTAL);
+            PRINT("Probabilidad CPU2 -> DISC1    = ", V_DISC(1) / V_TOTAL);
+            PRINT("Probabilidad CPU2 -> DISC2    = ", V_DISC(2) / V_TOTAL);
+            PRINT("Probabilidad CPU2 -> TERMINAL = ", V_TERM / V_TOTAL);
+            PRINT("Probabilidad DISC1 -> CPU1    = ", 1.0);
+            PRINT("Probabilidad DISC2 -> CPU1   = ", 1.0);
+            PRINT("Probabilidad TERMINAL -> CPU1 = ", 1.0);
+            PRINT("Probabilidad DISC1 -> CPU2    = ", 1.0);
+            PRINT("Probabilidad DISC2 -> CPU2   = ", 1.0);
+            PRINT("Probabilidad TERMINAL -> CPU2 = ", 1.0);
             PRINT("----------------------------------------------------");
           END;
 /END/

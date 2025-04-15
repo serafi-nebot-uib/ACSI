@@ -46,7 +46,7 @@
      40             T_Z := MSERVICE(TERMINAL);
      41             T_R := N1 / MTHRUPUT(TERMINAL) - T_Z;
      42             T_T := T_R + T_Z;
-     43             WORK := MTHRUPUT(TERMINAL) * T_Z;
+     43             WORK := MTHRUPUT(TERMINAL) * T_R;
      44  
      45             PRINT("");
      46             PRINT("-------------- TIEMPOS DE RESPUESTA ---------------")
@@ -61,17 +61,25 @@
      53             PRINT("");
      54             PRINT("---------- PROBABILIDADES DE ENCAMINAMIENTO ---------
 -");
-     55             PRINT("Probabilidad CPU -> DISC1    = ", V_DISC(1) / V_TOTAL
+     55             PRINT("Probabilidad CPU1 -> DISC1    = ", V_DISC(1) / V_TOTA
+L);
+     56             PRINT("Probabilidad CPU1 -> DISC2    = ", V_DISC(2) / V_TOTA
+L);
+     57             PRINT("Probabilidad CPU1 -> TERMINAL = ", V_TERM / V_TOTAL);
+     58             PRINT("Probabilidad CPU2 -> DISC1    = ", V_DISC(1) / V_TOTA
+L);
+     59             PRINT("Probabilidad CPU2 -> DISC2    = ", V_DISC(2) / V_TOTA
+L);
+     60             PRINT("Probabilidad CPU2 -> TERMINAL = ", V_TERM / V_TOTAL);
+     61             PRINT("Probabilidad DISC1 -> CPU1    = ", 1.0);
+     62             PRINT("Probabilidad DISC2 -> CPU1   = ", 1.0);
+     63             PRINT("Probabilidad TERMINAL -> CPU1 = ", 1.0);
+     64             PRINT("Probabilidad DISC1 -> CPU2    = ", 1.0);
+     65             PRINT("Probabilidad DISC2 -> CPU2   = ", 1.0);
+     66             PRINT("Probabilidad TERMINAL -> CPU2 = ", 1.0);
+     67             PRINT("----------------------------------------------------"
 );
-     56             PRINT("Probabilidad CPU -> DISC2    = ", V_DISC(2) / V_TOTAL
-);
-     57             PRINT("Probabilidad CPU -> TERMINAL = ", V_TERM / V_TOTAL);
-     58             PRINT("Probabilidad DISC1 -> CPU    = ", 1.0);
-     59             PRINT("Probabilidad DISC2 -> CPU    = ", 1.0);
-     60             PRINT("Probabilidad TERMINAL -> CPU = ", 1.0);
-     61             PRINT("----------------------------------------------------"
-);
-     62           END;
+     68           END;
  
 1
  NUMERO DE USUARIOS=       20 
@@ -91,7 +99,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 17.80    * 8.000    * 2.225    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       8062 WORDS OF 4 BYTES
+              MEMORY USED:       8204 WORDS OF 4 BYTES
                (  0.16  % OF TOTAL MEMORY)
  
  ---------- DEMANDAS DE LOS DISPOSITIVOS ----------
@@ -105,15 +113,21 @@
  Tiempo de respuesta del sistema (R) =   0.9901    
  Tiempo de reflexion (Z)             =    8.000    
  Tiempo TOTAL (R+Z)                  =    8.990    
- Número de usuarios trabajando       =    17.80    
+ Número de usuarios trabajando       =    2.203    
  ---------------------------------------------------
  
  ---------- PROBABILIDADES DE ENCAMINAMIENTO ----------
- Probabilidad CPU -> DISC1    =   0.7778    
- Probabilidad CPU -> DISC2    =   0.1111    
- Probabilidad CPU -> TERMINAL =   0.1111    
- Probabilidad DISC1 -> CPU    =    1.000    
- Probabilidad DISC2 -> CPU    =    1.000    
- Probabilidad TERMINAL -> CPU =    1.000    
+ Probabilidad CPU1 -> DISC1    =   0.7778    
+ Probabilidad CPU1 -> DISC2    =   0.1111    
+ Probabilidad CPU1 -> TERMINAL =   0.1111    
+ Probabilidad CPU2 -> DISC1    =   0.7778    
+ Probabilidad CPU2 -> DISC2    =   0.1111    
+ Probabilidad CPU2 -> TERMINAL =   0.1111    
+ Probabilidad DISC1 -> CPU1    =    1.000    
+ Probabilidad DISC2 -> CPU1   =    1.000    
+ Probabilidad TERMINAL -> CPU1 =    1.000    
+ Probabilidad DISC1 -> CPU2    =    1.000    
+ Probabilidad DISC2 -> CPU2   =    1.000    
+ Probabilidad TERMINAL -> CPU2 =    1.000    
  ----------------------------------------------------
-     63 /END/
+     69 /END/

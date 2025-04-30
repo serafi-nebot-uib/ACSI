@@ -2,6 +2,7 @@
           REAL Z=8.;
           REAL V_CPU=8.,V_DISC=7.;
           REAL X,X1,X2,R,R1,R2,N1,N2;
+          REAL D,D1,D2,Db,Ns;
           INTEGER N;
 /STATION/ NAME=CPU;
 &         SCHED=PS;
@@ -30,6 +31,11 @@
             R2 := MRESPONS(DISC);
             N1 := X1 * R1;
             N2 := X2 * R2;
+            D1 := MSERVICE(CPU) * V_CPU;
+            D2 := MSERVICE(DISC) * V_DISC;
+            D := D1 + D2;
+            Db := MAX(D1,D2);
+            Ns := INTROUND((D + Z) / Db);
 
             PRINT("R1 = ", R1);
             PRINT("R2 = ", R2);
@@ -37,5 +43,10 @@
             PRINT("R  = ", R);
             PRINT("N1 = ", N1);
             PRINT("N2 = ", N2);
+            PRINT("D1 = ", D1);
+            PRINT("D2 = ", D2);
+            PRINT("D  = ", D);
+            PRINT("Db = ", Db);
+            PRINT("Ns = ", Ns);
           END;
 /END/

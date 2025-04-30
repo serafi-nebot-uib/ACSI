@@ -4,44 +4,45 @@
  
  
       1 /DECLARE/ QUEUE CPU,DISC,TERMINAL;
-      2           REAL V_CPU=8.,V_DISC=7.;
-      3           REAL X,X1,X2,R,R1,R2,N1,N2;
-      4           INTEGER N;
-      5 /STATION/ NAME=CPU;
-      6 &         SCHED=PS;
-      7           SERVICE=EXP(0.03);
-      8           TRANSIT=DISC,V_DISC,TERMINAL,1;
-      9 /STATION/ NAME=DISC;
-     10           TRANSIT=CPU;
-     11           SERVICE=EXP(0.1);
-     12 /STATION/ NAME=TERMINAL;
-     13           TYPE=INFINITE;
-     14           INIT=N;
-     15           SERVICE=EXP(8.);
-     16           TRANSIT=CPU;
-     17 /CONTROL/ CLASS=ALL QUEUE;
-     18 /EXEC/    FOR N:=1 STEP 1 UNTIL 10 DO
-     19           BEGIN
-     20             PRINT;
-     21             PRINT("NUMERO DE USUARIOS=",N);
-     22             SOLVE;
-     23  
-     24             X := MTHRUPUT(TERMINAL);
-     25             X1 := MTHRUPUT(CPU);
-     26             X2 := MTHRUPUT(DISC);
-     27             R := N / X - MSERVICE(TERMINAL);
-     28             R1 := MRESPONS(CPU);
-     29             R2 := MRESPONS(DISC);
-     30             N1 := X1 * R1;
-     31             N2 := X2 * R2;
-     32  
-     33             PRINT("R1 = ", R1);
-     34             PRINT("R2 = ", R2);
-     35             PRINT("X = ", X);
-     36             PRINT("R  = ", R);
-     37             PRINT("N1 = ", N1);
-     38             PRINT("N2 = ", N2);
-     39           END;
+      2           REAL Z=8.;
+      3           REAL V_CPU=8.,V_DISC=7.;
+      4           REAL X,X1,X2,R,R1,R2,N1,N2;
+      5           INTEGER N;
+      6 /STATION/ NAME=CPU;
+      7 &         SCHED=PS;
+      8           SERVICE=EXP(0.03);
+      9           TRANSIT=DISC,V_DISC,TERMINAL,1;
+     10 /STATION/ NAME=DISC;
+     11           TRANSIT=CPU;
+     12           SERVICE=EXP(0.1);
+     13 /STATION/ NAME=TERMINAL;
+     14           TYPE=INFINITE;
+     15           INIT=N;
+     16           SERVICE=EXP(Z);
+     17           TRANSIT=CPU;
+     18 /CONTROL/ CLASS=ALL QUEUE;
+     19 /EXEC/    FOR N:=1 STEP 1 UNTIL 10 DO
+     20           BEGIN
+     21             PRINT;
+     22             PRINT("NUMERO DE USUARIOS=",N);
+     23             SOLVE;
+     24  
+     25             X := MTHRUPUT(TERMINAL);
+     26             X1 := MTHRUPUT(CPU);
+     27             X2 := MTHRUPUT(DISC);
+     28             R := N / X - Z;
+     29             R1 := MRESPONS(CPU);
+     30             R2 := MRESPONS(DISC);
+     31             N1 := X1 * R1;
+     32             N2 := X2 * R2;
+     33  
+     34             PRINT("R1 = ", R1);
+     35             PRINT("R2 = ", R2);
+     36             PRINT("X = ", X);
+     37             PRINT("R  = ", R);
+     38             PRINT("N1 = ", N1);
+     39             PRINT("N2 = ", N2);
+     40           END;
  
 1
  NUMERO DE USUARIOS=        1 
@@ -57,7 +58,7 @@
  *TERMINAL  * 8.000    *0.0000E+00*0.8949    * 8.000    *0.1119    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       6984 WORDS OF 4 BYTES
+              MEMORY USED:       6992 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3000E-01
  R2 =   0.1000    
@@ -80,7 +81,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 1.778    * 8.000    *0.2222    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7010 WORDS OF 4 BYTES
+              MEMORY USED:       7018 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3081E-01
  R2 =   0.1078    
@@ -103,7 +104,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 2.646    * 8.000    *0.3307    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7036 WORDS OF 4 BYTES
+              MEMORY USED:       7044 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3164E-01
  R2 =   0.1168    
@@ -126,7 +127,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 3.498    * 8.000    *0.4372    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7062 WORDS OF 4 BYTES
+              MEMORY USED:       7070 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3251E-01
  R2 =   0.1270    
@@ -149,7 +150,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 4.329    * 8.000    *0.5412    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7088 WORDS OF 4 BYTES
+              MEMORY USED:       7096 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3341E-01
  R2 =   0.1389    
@@ -172,7 +173,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 5.138    * 8.000    *0.6422    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7114 WORDS OF 4 BYTES
+              MEMORY USED:       7122 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3434E-01
  R2 =   0.1526    
@@ -195,7 +196,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 5.918    * 8.000    *0.7398    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7140 WORDS OF 4 BYTES
+              MEMORY USED:       7148 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3529E-01
  R2 =   0.1686    
@@ -218,7 +219,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 6.666    * 8.000    *0.8332    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7166 WORDS OF 4 BYTES
+              MEMORY USED:       7174 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3627E-01
  R2 =   0.1873    
@@ -241,7 +242,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 7.375    * 8.000    *0.9219    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7192 WORDS OF 4 BYTES
+              MEMORY USED:       7200 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3725E-01
  R2 =   0.2092    
@@ -264,7 +265,7 @@
  *TERMINAL  * 8.000    *0.0000E+00* 8.039    * 8.000    * 1.005    *
  *          *          *          *          *          *          *
  *******************************************************************
-              MEMORY USED:       7218 WORDS OF 4 BYTES
+              MEMORY USED:       7226 WORDS OF 4 BYTES
                (  0.14  % OF TOTAL MEMORY)
  R1 =   0.3824E-01
  R2 =   0.2350    
@@ -272,4 +273,4 @@
  R  =    1.951    
  N1 =   0.3074    
  N2 =    1.653    
-     40 /END/
+     41 /END/

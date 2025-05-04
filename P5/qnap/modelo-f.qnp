@@ -1,0 +1,49 @@
+/DECLARE/ QUEUE CPU,DISC(2),TERMINAL;
+          REAL Z=8.;
+          REAL V_CPU=8.,V_DISC(2)=(3.5,3.5);
+          REAL X,X1,X2,X3,R,R1,R2,R3,N1,N2,N3;
+          INTEGER N;
+/STATION/ NAME=CPU;
+&         SCHED=PS;
+          SERVICE=EXP(0.03);
+          TRANSIT=DISC,V_DISC,TERMINAL,1;
+/STATION/ NAME=DISC;
+          TRANSIT=CPU;
+/STATION/ NAME=DISC(1);
+          SERVICE=EXP(0.1);
+/STATION/ NAME=DISC(2);
+          SERVICE=EXP(0.1);
+/STATION/ NAME=TERMINAL;
+          TYPE=INFINITE;
+          INIT=N;
+          SERVICE=EXP(Z);
+          TRANSIT=CPU;
+/CONTROL/ CLASS=ALL QUEUE;
+/EXEC/    FOR N:=1 STEP 1 UNTIL 50 DO
+          BEGIN
+            PRINT;
+            PRINT("NUMERO DE USUARIOS=",N);
+            SOLVE;
+
+            X := MTHRUPUT(TERMINAL);
+            X1 := MTHRUPUT(CPU);
+            X2 := MTHRUPUT(DISC(1));
+            X3 := MTHRUPUT(DISC(2));
+            R := N / X - Z;
+            R1 := MRESPONS(CPU);
+            R2 := MRESPONS(DISC(1));
+            R3 := MRESPONS(DISC(2));
+            N1 := X1 * R1;
+            N2 := X2 * R2;
+            N3 := X2 * R3;
+
+            PRINT("R1 = ", R1);
+            PRINT("R2 = ", R2);
+            PRINT("R3 = ", R3);
+            PRINT("X = ", X);
+            PRINT("R  = ", R);
+            PRINT("N1 = ", N1);
+            PRINT("N2 = ", N2);
+            PRINT("N3 = ", N3);
+          END;
+/END/

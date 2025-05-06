@@ -77,6 +77,8 @@ for n, data in enumerate(zip(cpu.R, disc.R, R, X, cpu.N, disc.N, RT, NW, NZ)):
   print(f"{n}{sep}{s}")
 ```
 
+\pagebreak
+
 Resultado de su ejecución:
 
 ```

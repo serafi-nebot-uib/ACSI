@@ -334,11 +334,11 @@ Ejecutando el modelo se han obtenido los siguientes resultados:
 
 Las demandas de cada dispositivo se calculan con la expresión: $D_i = V_i \cdot S_i$ (líneas 34-35).
 
-$D_1 = V_1 \cdot S_2 = 8 \cdot 0.03 = 0.24$
+$D_1 = V_1 \cdot S_1 = 8 \cdot 0.03 = 0.24$
 
 $D_2 = V_2 \cdot S_2 = 7 \cdot 0.1 = 0.7$
 
-La demanda total es la suma de todas las demandas: $D = \sum\limits_{i=1}^{K} D_i = D_1 + D_2 = 0.24 + 0.7 = 0.94$ (línea 36).
+La demanda total es la suma de las demandas de todos los dispositivos: $D = \sum\limits_{i=1}^{K} D_i = D_1 + D_2 = 0.24 + 0.7 = 0.94$ (línea 36).
 
 La demanda del cuello de botella es la demanda máxima de todos los dispositivos: $D_b = \max\limits_{i=1 \ldots K} \{D_i\} = \max \{D1, D2\} = \max \{0.24, 0.7\} = 0.7 = D_2$ (línea 37).
 

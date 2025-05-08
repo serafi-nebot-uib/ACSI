@@ -1430,6 +1430,8 @@ El tiempo de respuesta de los discos ha disminuido debido a que la cantidad de t
 ![](./qnap/modelo-d-R.png)
 ![](./qnap/modelo-d-X.png)
 
+El resultado de las 30 iteraciones esta en el excel para evitar alargar demasiado el contenido de este documento.
+
 ```
       1 /DECLARE/ QUEUE CPU,DISC,TERMINAL;
       2           REAL Z=8.;
@@ -1485,7 +1487,7 @@ El tiempo de respuesta de los discos ha disminuido debido a que la cantidad de t
 
 # Apartado f
 
-He incrementado el numero de iteraciones a 50 para poder visualizar mejor la convergencia del tiempo de respuesta con los límites asintóticos.
+He incrementado el numero de iteraciones a 50 para poder visualizar mejor la convergencia del tiempo de respuesta con los límites asintóticos. El resultado de las 50 iteraciones esta en el excel para evitar alargar demasiado el contenido de este documento.
 
 ![](./qnap/modelo-f-R.png)
 ![](./qnap/modelo-f-X.png)

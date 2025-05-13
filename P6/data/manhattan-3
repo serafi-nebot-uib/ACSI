@@ -1,0 +1,51 @@
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 3 -A "weka.core.ManhattanDistance -R first-last" -I 500 -num-slots 1 -S 10
+Relation:     data-weka.filters.unsupervised.attribute.Remove-R4
+Instances:    3600
+Attributes:   3
+              ﻿requests/s
+              ProcessTime
+              QueueTime
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 14
+Sum of within cluster distances: 753.1562999514484
+
+Initial starting points (random):
+
+Cluster 0: 1164.542701,0.002005,0.000324
+Cluster 1: 1580.850698,0.002421,0.000211
+Cluster 2: 1207.601196,0.002403,0.000141
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                         Cluster#
+Attribute     Full Data         0         1         2
+               (3600.0)  (1351.0)   (950.0)  (1299.0)
+=====================================================
+﻿requests/s   1844.8437 1319.1447 2273.9313  1948.303
+ProcessTime      0.0028    0.0022    0.0039    0.0027
+QueueTime        0.0018    0.0003    0.0147    0.0015
+
+
+
+
+Time taken to build model (full training data) : 0.04 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0      1351 ( 38%)
+1       950 ( 26%)
+2      1299 ( 36%)
+

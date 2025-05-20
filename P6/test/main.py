@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 
-wb = load_workbook("data.xlsx")
+wb = load_workbook("data/data.xlsx")
 ws = wb.active  # or wb["SheetName"]
 
 rows = ws.iter_rows(values_only=True)
@@ -18,10 +18,10 @@ N = len(total_time)
 def line():
   x = np.arange(0, req_sec.size, 1)
 
-  fig, ax_time = plt.subplots()
+  fig, ax_time = plt.subplots(figsize=(12, 8))
 
   ax_time.set_ylabel("time (s)")
-  total_time_line, *_ = ax_time.plot(x, total_time, label="TotalTime", color="black")
+  # total_time_line, *_ = ax_time.plot(x, total_time, label="TotalTime", color="black")
   proc_time_line, *_ = ax_time.plot(x, proc_time, label="ProessTime", color="red")
   queue_time_line, *_ = ax_time.plot(x, queue_time, label="QueueTime", color="blue")
   send_time_line, *_ = ax_time.plot(x, send_time, label="SendTime", color="green")
@@ -30,29 +30,11 @@ def line():
   ax_prod.set_ylabel("productivity (req/sec)")
   req_sec_line, *_ = ax_prod.plot(x, req_sec, label="requests/s", color="orange")
 
-  lines = [total_time_line, proc_time_line, queue_time_line, send_time_line, req_sec_line]
+  lines = [proc_time_line, queue_time_line, send_time_line, req_sec_line]
   labels = [l.get_label() for l in lines]
   ax_time.legend(lines, labels, loc="upper right")
 
   fig.tight_layout()
   plt.show()
 
-def scatter():
-  fig, ax = plt.subplots()
-
-  ax.set_xlabel("productivity (req/sec)")
-  ax.set_ylabel("time (s)")
-  # ax.scatter(req_sec, total_time, label="TotalTime", color="black")
-  ax.scatter(req_sec, proc_time, label="ProessTime", color="red")
-  # ax.scatter(req_sec, queue_time, label="QueueTime", color="blue")
-  # ax.scatter(req_sec, send_time, label="SendTime", color="green")
-
-  # datasets = [proc_time_line, queue_time_line, send_time_line]
-  # labels = [l.get_label() for l in datasets]
-  ax.legend(loc="upper right")
-
-  fig.tight_layout()
-  plt.show()
-
 line()
-# scatter()

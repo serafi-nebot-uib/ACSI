@@ -1,12 +1,13 @@
 === Run information ===
 
-Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 5 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 10
-Relation:     data-weka.filters.unsupervised.attribute.Remove-R4
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 5 -A "weka.core.EuclideanDistance -R first-last" -I 100 -num-slots 1 -S 10
+Relation:     data
 Instances:    3600
-Attributes:   3
+Attributes:   4
               ﻿requests/s
               ProcessTime
               QueueTime
+              SendTime
 Test mode:    evaluate on training data
 
 
@@ -16,27 +17,28 @@ Test mode:    evaluate on training data
 kMeans
 ======
 
-Number of iterations: 44
-Within cluster sum of squared errors: 63.40892257049398
+Number of iterations: 39
+Within cluster sum of squared errors: 84.54094683241485
 
 Initial starting points (random):
 
-Cluster 0: 1164.542701,0.002005,0.000324
-Cluster 1: 1580.850698,0.002421,0.000211
-Cluster 2: 1207.601196,0.002403,0.000141
-Cluster 3: 1167.295218,0.001918,0.000122
-Cluster 4: 1267.69637,0.002751,0.001629
+Cluster 0: 1164.542701,0.002005,0.000324,0.000091
+Cluster 1: 1580.850698,0.002421,0.000211,0.000133
+Cluster 2: 1207.601196,0.002403,0.000141,0.00013
+Cluster 3: 1167.295218,0.001918,0.000122,0.000062
+Cluster 4: 1267.69637,0.002751,0.001629,0.00011
 
 Missing values globally replaced with mean/mode
 
 Final cluster centroids:
                          Cluster#
 Attribute     Full Data         0         1         2         3         4
-               (3600.0)   (887.0)   (326.0)   (482.0)   (740.0)  (1165.0)
+               (3600.0)  (1162.0)   (335.0)   (486.0)   (878.0)   (739.0)
 =========================================================================
-﻿requests/s    1804.311 1331.6731 2307.2647 1335.0028  2240.304 1940.6533
-ProcessTime      0.0029    0.0021    0.0046    0.0029    0.0036    0.0026
-QueueTime        0.0057    0.0004    0.0273    0.0031    0.0108    0.0017
+﻿requests/s    1804.311 1937.8234 2308.9958 1324.4458 1336.1735 2237.3672
+ProcessTime      0.0029    0.0026    0.0046    0.0029    0.0021    0.0036
+QueueTime        0.0057    0.0017    0.0271    0.0029    0.0004    0.0106
+SendTime         0.0001    0.0001    0.0001    0.0001    0.0001    0.0001
 
 
 
@@ -47,9 +49,9 @@ Time taken to build model (full training data) : 0.04 seconds
 
 Clustered Instances
 
-0       887 ( 25%)
-1       326 (  9%)
-2       482 ( 13%)
-3       740 ( 21%)
-4      1165 ( 32%)
+0      1162 ( 32%)
+1       335 (  9%)
+2       486 ( 14%)
+3       878 ( 24%)
+4       739 ( 21%)
 

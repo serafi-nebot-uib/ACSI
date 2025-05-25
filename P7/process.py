@@ -40,19 +40,20 @@ def line():
 
   fig, ax_time = plt.subplots(figsize=(12, 8))
 
-  ax_time.set_xlabel("measure number")
   ax_time.set_ylabel("time (s)")
   # total_time_line, *_ = ax_time.plot(x, total_time, label="TotalTime", color="black")
-  proc_time_line, *_ = ax_time.plot(x, proc_time, label="ProessTime", color="red")
-  queue_time_line, *_ = ax_time.plot(x, queue_time, label="QueueTime", color="blue")
+  # queue_time_line, *_ = ax_time.plot(x, queue_time, label="QueueTime", color="blue")
+  # proc_time_line, *_ = ax_time.plot(x, proc_time, label="ProessTime", color="red")
   send_time_line, *_ = ax_time.plot(x, send_time, label="SendTime", color="green")
 
-  ax_prod = ax_time.twinx()
-  ax_prod.set_ylabel("productivity (req/sec)")
-  req_sec_line, *_ = ax_prod.plot(x, req_sec, label="requests/s", color="orange")
+  # ax_prod = ax_time.twinx()
+  # ax_prod.set_xlabel("measure number")
+  # ax_prod.set_ylabel("productivity (req/sec)")
 
-  lines = [proc_time_line, queue_time_line, send_time_line, req_sec_line]
-  # lines = [send_time_line, req_sec_line]
+  # req_sec_line, *_ = ax_prod.plot(x, req_sec, label="requests/s", color="orange")
+
+  # lines = [proc_time_line, queue_time_line, send_time_line, req_sec_line]
+  lines = [send_time_line]
   labels = [l.get_label() for l in lines]
   ax_time.legend(lines, labels, loc="upper right")
 
@@ -106,8 +107,8 @@ def model(y, name="y"):
   plt.legend()
   plt.show()
 
-# line()
-model(req_sec, "requests/s")
-model(proc_time, "ProcessTime")
-model(queue_time, "QueueTime")
-model(send_time, "SendTime")
+line()
+# model(req_sec, "requests/s")
+# model(proc_time, "ProcessTime")
+# model(queue_time, "QueueTime")
+# model(send_time, "SendTime")

@@ -514,3 +514,81 @@ $$
 
 1. Actualización (upgrading): Reemplazar dispositivos por otros más rápidos, añadir más dispositivos para realizar más tareas en paralelo, etc
 2. Ajuste (tuning): optimizar el funcionamiento de todos los componentes, muchos ajustes se hacen en el sistema operativo
+
+\pagebreak
+
+# Tema 6
+
+Utilización de medias
+
+- Si la carga es homogénea se puede utilizar medias
+- Si la carga es heterogénea se utiliza el agrupamiento (clustering)
+
+## Técnicas de agrupamiento
+
+1. Tomar una muestra
+2. Seleccionar parámetros
+3. Transformar parámetros si fuese necesario
+4. Eliminar valores extremos
+5. Escalar las observaciones
+6. Seleccionar una métrica para la distancia
+7. Construir los grupos o clusters
+8. Interpretar los grupos
+9. Cambiar la agrupación si fuese necesario y repetir desde 3 a 7
+10. Seleccionar los componentes representativos
+
+Clustering method, Minimum Spanning Trees (MST):
+
+![](./img/mst-1.png)
+![](./img/mst-2.png)
+![](./img/mst-3.png)
+
+\pagebreak
+
+# Tema 7
+
+## Patrones de datos 
+
+![](./img/historical-patterns.png)
+
+## Técnicas de predicción
+
+**Error cuadrático medio**
+
+$$
+\frac{1}{n} \sum\limits_{t=1}^{n}{(y(t) - f(t))^2}
+$$
+
+**Regresión lineal**
+
+Útil para datos no estacionales que muestran una tendencia.
+
+$$
+f(x) = a + bx
+$$
+
+$$
+b = \frac{\sum\limits_{i=1}^{n}{x_i y_i} - n \overline{x}\overline{y}}{\sum\limits_{i=1}^{n}{x_i^2} - n \overline{x}^2}
+$$
+
+$$
+a = \overline{y} - b \overline{x}
+$$
+
+**Medias móviles**
+
+Apropiada para predicciones a corto plazo
+
+$$
+f(t+1) = \frac{y(t) + \dots + y(t-n+1)}{n}
+$$
+
+Se debe elegir un valor de $n$ que minimize el error de predicción.
+
+**Suavizado exponencial**
+
+Para datos no estacionales que no muestran una tendencia sistemática.
+
+$$
+f(t+1) = (1 - \alpha)f(t) + \alpha(y(t+1)) = f(t) + \alpha(y(t+1) - f(t)) \text{, con } 0 < \alpha < 1
+$$
